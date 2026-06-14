@@ -5,10 +5,13 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
 import type { CartItem, Portion } from "./CartContext";
+import { supabase } from "@/lib/supabase/client";
+import { orderToRow, rowToOrder, type OrderRow } from "@/lib/supabase/mappers";
 
 export type OrderStatus = "preparing" | "ready" | "completed" | "cancelled";
 
@@ -64,28 +67,67 @@ interface OrdersContextValue {
 
 const OrdersContext = createContext<OrdersContextValue | null>(null);
 const STORAGE_KEY = "goodfood:orders";
+const POLL_INTERVAL_MS = 5000;
 
 /**
- * Simple localStorage-backed order history. Swap for a Supabase `orders`
- * table once auth + backend are wired up — `addOrder` is the only place
- * that would need to change.
+ * Order history backed by Supabase's `orders` table, so an order placed on
+ * a child's phone shows up live in the parent's admin dashboard (polled
+ * every few seconds).
+ *
+ * Falls back to `localStorage` if Supabase isn't configured.
  */
 export function OrdersProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const loadedFromLocalStorage = useRef(false);
 
-  useEffect(() => {
+  const loadFromLocalStorage = useCallback(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) setOrders(JSON.parse(raw));
     } catch {
       // ignore malformed storage
     }
-    setHydrated(true);
+    loadedFromLocalStorage.current = true;
   }, []);
 
+  const fetchOrders = useCallback(async () => {
+    if (!supabase) {
+      if (!loadedFromLocalStorage.current) loadFromLocalStorage();
+      setHydrated(true);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("orders")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.warn("Supabase orders fetch failed, using local data:", error);
+      if (!loadedFromLocalStorage.current) loadFromLocalStorage();
+      setHydrated(true);
+      return;
+    }
+
+    setOrders((data as OrderRow[]).map(rowToOrder));
+    setHydrated(true);
+  }, [loadFromLocalStorage]);
+
   useEffect(() => {
-    if (!hydrated) return;
+    fetchOrders();
+  }, [fetchOrders]);
+
+  // Poll for new/updated orders placed from other devices.
+  useEffect(() => {
+    if (!supabase) return;
+    const interval = setInterval(fetchOrders, POLL_INTERVAL_MS);
+    return () => clearInterval(interval);
+  }, [fetchOrders]);
+
+  // localStorage fallback persistence (only used when Supabase isn't configured).
+  useEffect(() => {
+    if (supabase || !hydrated || !loadedFromLocalStorage.current) return;
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
     } catch (err) {
@@ -109,15 +151,45 @@ export function OrdersProvider({ children }: { children: ReactNode }) {
       createdAt: new Date().toISOString(),
     };
     setOrders((prev) => [order, ...prev]);
+
+    if (supabase) {
+      supabase
+        .from("orders")
+        .insert(orderToRow(order))
+        .then(({ error }) => {
+          if (error) console.warn("Couldn't save order to Supabase:", error);
+        });
+    }
+
     return order;
   }, []);
 
   const updateOrderStatus = useCallback((orderId: string, status: OrderStatus) => {
     setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status } : o)));
+
+    if (supabase) {
+      supabase
+        .from("orders")
+        .update({ status, updated_at: new Date().toISOString() })
+        .eq("id", orderId)
+        .then(({ error }) => {
+          if (error) console.warn("Couldn't update order status in Supabase:", error);
+        });
+    }
   }, []);
 
   const removeOrder = useCallback((orderId: string) => {
     setOrders((prev) => prev.filter((o) => o.id !== orderId));
+
+    if (supabase) {
+      supabase
+        .from("orders")
+        .delete()
+        .eq("id", orderId)
+        .then(({ error }) => {
+          if (error) console.warn("Couldn't delete order in Supabase:", error);
+        });
+    }
   }, []);
 
   return (

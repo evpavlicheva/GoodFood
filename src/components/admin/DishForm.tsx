@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { CATEGORIES, type Dish, type DishAnalysis, type DishCategory } from "@/data/dishes";
 import { analyzeDishPhoto } from "@/lib/ai/analyzeDish";
 import { resizeImageDataUrl } from "@/lib/image";
+import { uploadDishImage } from "@/lib/supabase/storage";
 import { buttonClasses } from "@/components/ui/Button";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -42,11 +43,17 @@ export default function DishForm({ initial, submitLabel, onSubmit, onDelete }: D
       // Shrink the photo before storing it — full-size camera photos can be
       // several MB each, which quickly exceeds localStorage's quota.
       const dataUrl = await resizeImageDataUrl(rawDataUrl);
-      setImage(dataUrl);
+      setImage(dataUrl); // instant local preview
 
-      // Ask Claude Vision to identify the dish, suggest copy, and estimate nutrition.
+      // Ask Claude Vision to identify the dish, suggest copy, and estimate
+      // nutrition, while uploading the photo to Supabase Storage so it's
+      // shared across devices.
       setAnalyzing(true);
-      const result = await analyzeDishPhoto(dataUrl, name);
+      const [result, hostedUrl] = await Promise.all([
+        analyzeDishPhoto(dataUrl, name),
+        uploadDishImage(dataUrl),
+      ]);
+      setImage(hostedUrl);
       setAnalysis({
         calories: result.calories,
         protein: result.protein,

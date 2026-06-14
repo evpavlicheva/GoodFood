@@ -28,9 +28,12 @@ Motion, and Supabase.
    ANTHROPIC_API_KEY=your-key-here
    ```
 
-   Note: the app currently runs entirely on `localStorage` (see "Current state"
-   below), so it works without the Supabase variables filled in — they're
-   placeholders for the planned Supabase integration.
+   The Supabase variables connect the app to a shared Postgres database
+   (menu, orders, cart) and a Storage bucket for dish photos — see "Data &
+   state" below. Run `supabase/schema.sql` and
+   `supabase/migration_2_columns.sql` once in your project's SQL Editor. If
+   these variables are missing, the app falls back to per-browser
+   `localStorage` so it still runs without a backend.
 
    `ANTHROPIC_API_KEY` powers the real AI dish-photo analysis in the admin
    "Add/Edit dish" form (see below). Without it, photo uploads still work but
@@ -123,16 +126,29 @@ friendly but more "grown-up")
 
 ### Data & state
 
-Everything currently persists to `localStorage` (no backend yet):
+When Supabase env vars are set, these are stored in shared Postgres tables
+(see `supabase/schema.sql`) so they sync across every device:
+
+| Table | Stores |
+|---|---|
+| `dishes` | Editable dish catalog (seeded from `src/data/dishes.ts` on first run) |
+| `orders` | Placed orders & statuses |
+| `carts` | Cart contents, keyed by a per-browser device id |
+
+Dish photos uploaded in the admin form go to the `dish-images` Storage
+bucket and are referenced by public URL.
+
+A few things still live in `localStorage` (per-device, not shared):
 
 | Key | Stores |
 |---|---|
-| `goodfood:cart` | Current cart contents |
-| `goodfood:orders` | Placed orders & statuses |
-| `goodfood:menu` | Editable dish catalog (seeded from `src/data/dishes.ts`) |
 | `goodfood:child-profile` | Child's name + chosen mascot |
 | `goodfood:admin-auth` | Parent/admin login state |
 | `goodfood:lang` | Language preference (`en`/`ru`) |
+| `goodfood:device-id` | Random id used to identify this browser's cart row |
+
+If Supabase env vars are missing, `dishes`/`orders`/`carts` also fall back to
+`localStorage` (`goodfood:menu`, `goodfood:orders`, `goodfood:cart`).
 
 All contexts (`CartContext`, `OrdersContext`, `MenuContext`,
 `LanguageContext`) are combined in `src/app/providers.tsx`.
@@ -150,9 +166,9 @@ All contexts (`CartContext`, `OrdersContext`, `MenuContext`,
 
 ### Known placeholders / next steps
 
-- **Supabase**: env vars are wired up but the app doesn't talk to Supabase
-  yet — `localStorage` stands in for the database and `adminAuth.ts` stands in
-  for Supabase Auth.
+- **Supabase**: menu, orders, and cart sync via Postgres tables + a Storage
+  bucket for photos (see "Data & state"). `adminAuth.ts` still stands in for
+  real Supabase Auth (PIN-based login).
 - **AI dish analysis**: `analyzeDishPhoto()` now calls Claude Vision via
   `/api/analyze-dish` (set `ANTHROPIC_API_KEY` in `.env.local`); falls back to
   a randomized local simulation if the key is missing or the call fails.

@@ -5,9 +5,12 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
+import { supabase } from "@/lib/supabase/client";
+import type { CartRow } from "@/lib/supabase/mappers";
 
 export type Portion = "whole" | "half";
 
@@ -32,32 +35,90 @@ interface CartContextValue {
 
 const CartContext = createContext<CartContextValue | null>(null);
 const STORAGE_KEY = "goodfood:cart";
+const DEVICE_ID_KEY = "goodfood:device-id";
+
+function getDeviceId(): string {
+  let id = window.localStorage.getItem(DEVICE_ID_KEY);
+  if (!id) {
+    id =
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : `device_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    window.localStorage.setItem(DEVICE_ID_KEY, id);
+  }
+  return id;
+}
 
 /**
- * Simple localStorage-backed cart. Swap for Supabase-synced cart once
- * real ordering/checkout logic is wired up.
+ * Cart contents, persisted to a Supabase `carts` row keyed by a per-browser
+ * device id (so a cart survives reinstalls/cache clears on the same
+ * device). Falls back to plain `localStorage` if Supabase isn't configured.
  */
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const deviceIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) setItems(JSON.parse(raw));
-    } catch {
-      // ignore malformed storage
+    let active = true;
+
+    async function load() {
+      if (!supabase) {
+        try {
+          const raw = window.localStorage.getItem(STORAGE_KEY);
+          if (raw) setItems(JSON.parse(raw));
+        } catch {
+          // ignore malformed storage
+        }
+        if (active) setHydrated(true);
+        return;
+      }
+
+      const deviceId = getDeviceId();
+      deviceIdRef.current = deviceId;
+
+      const { data, error } = await supabase
+        .from("carts")
+        .select("*")
+        .eq("device_id", deviceId)
+        .maybeSingle();
+
+      if (error) {
+        console.warn("Supabase cart fetch failed:", error);
+      } else if (data) {
+        const row = data as CartRow;
+        if (active) setItems(row.items ?? []);
+      }
+
+      if (active) setHydrated(true);
     }
-    setHydrated(true);
+
+    load();
+    return () => {
+      active = false;
+    };
   }, []);
 
   useEffect(() => {
     if (!hydrated) return;
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    } catch (err) {
-      console.warn("Couldn't save cart to localStorage (storage full?)", err);
+
+    if (!supabase) {
+      try {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      } catch (err) {
+        console.warn("Couldn't save cart to localStorage (storage full?)", err);
+      }
+      return;
     }
+
+    const deviceId = deviceIdRef.current ?? getDeviceId();
+    deviceIdRef.current = deviceId;
+    supabase
+      .from("carts")
+      .upsert({ device_id: deviceId, items, updated_at: new Date().toISOString() })
+      .then(({ error }) => {
+        if (error) console.warn("Couldn't save cart to Supabase:", error);
+      });
   }, [items, hydrated]);
 
   const addItem = useCallback((item: Omit<CartItem, "quantity">) => {

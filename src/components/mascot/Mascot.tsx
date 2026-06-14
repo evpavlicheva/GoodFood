@@ -18,7 +18,7 @@ export interface MascotProps {
    */
   message?: string | null;
   /** Overall size of the mascot avatar */
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "sm" | "md" | "lg" | "xl" | "xxl";
   /** Extra classes for the wrapping container */
   className?: string;
   /** Disable the playful "tap to react" interaction */
@@ -30,6 +30,8 @@ const SIZE_CLASSES: Record<NonNullable<MascotProps["size"]>, string> = {
   md: "h-32 w-32 text-7xl",
   lg: "h-44 w-44 text-8xl",
   xl: "h-56 w-56 text-[5.5rem]",
+  // 3x the size of "sm" — used for the floating corner mascot.
+  xxl: "h-60 w-60 text-[5.5rem]",
 };
 
 // Per-emotion body animations. Each loops so the mascot always feels alive —
@@ -72,16 +74,6 @@ const bodyVariants: Variants = {
     scale: [1, 1.05, 1],
     transition: { duration: 0.8, repeat: Infinity, ease: "easeInOut" },
   },
-};
-
-// Soft glow behind the mascot, pulsing gently faster for higher-energy emotions.
-const GLOW_DURATION: Record<MascotEmotion, number> = {
-  idle: 3.2,
-  happy: 1.6,
-  excited: 1,
-  surprised: 1.3,
-  thinking: 2.8,
-  cheering: 0.9,
 };
 
 /**
@@ -144,21 +136,6 @@ export default function Mascot({
       </div>
 
       <div className={`relative ${SIZE_CLASSES[size]}`}>
-        {/* Soft glow that pulses faster for higher-energy emotions */}
-        <motion.div
-          aria-hidden
-          className={`absolute inset-0 rounded-full ${mascot.bgClass} blur-xl`}
-          animate={{
-            scale: activeEmotion === "idle" ? [0.85, 1, 0.85] : [0.92, 1.18, 0.92],
-            opacity: [0.25, 0.45, 0.25],
-          }}
-          transition={{
-            duration: GLOW_DURATION[activeEmotion],
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-
         <motion.div
           role={interactive ? "button" : undefined}
           aria-label={interactive ? `${mascot.name} — tap to react` : mascot.name}
@@ -170,7 +147,7 @@ export default function Mascot({
               handleTap();
             }
           }}
-          className={`relative flex h-full w-full items-center justify-center rounded-full ${mascot.bgClass} shadow-duo-lg ${mascot.shadowClass} ${
+          className={`relative flex h-full w-full items-center justify-center ${
             interactive ? "cursor-pointer" : ""
           }`}
           variants={bodyVariants}
@@ -183,8 +160,8 @@ export default function Mascot({
             src={mascot.image}
             alt={mascot.name}
             fill
-            sizes="224px"
-            className="select-none object-contain p-2"
+            sizes="240px"
+            className="select-none object-contain drop-shadow-xl"
             priority
             draggable={false}
           />

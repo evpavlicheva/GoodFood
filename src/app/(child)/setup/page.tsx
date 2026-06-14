@@ -14,9 +14,14 @@ import { useLanguage } from "@/context/LanguageContext";
 export default function SetupPage() {
   const router = useRouter();
   const { t } = useLanguage();
-  const { setProfile } = useChildProfile();
+  const { profile, setProfile } = useChildProfile();
   const [name, setName] = useState("");
-  const [selected, setSelected] = useState<MascotId | null>(null);
+  // Default to the currently active mascot (or the first one) so the
+  // picker always shows a mascot pre-selected — the child just needs to
+  // type their name (or tap a different buddy) to continue.
+  const [selected, setSelected] = useState<MascotId | null>(
+    profile?.mascotId ?? MASCOTS[0]?.id ?? null
+  );
 
   const trimmedName = name.trim();
   const canContinue = trimmedName.length > 0 && selected !== null;

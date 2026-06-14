@@ -59,6 +59,7 @@ const en = {
     added: "Added! 🎉",
     min: "min",
     kcal: "kcal",
+    unavailable: "Not available right now",
   },
   categories: {
     All: "All",
@@ -160,6 +161,7 @@ const en = {
       carbs: "Carbs (g)",
       funFact: "Fun fact",
       funFactPlaceholder: "A fun fact the mascot can share about this dish",
+      unavailable: "Unavailable (out of stock) — kids won't be able to order this dish",
       delete: "Delete dish",
       confirmDelete: 'Remove "{name}" from the menu?',
     },
@@ -227,6 +229,7 @@ const ru: typeof en = {
     added: "Добавлено! 🎉",
     min: "мин",
     kcal: "ккал",
+    unavailable: "Сейчас недоступно",
   },
   categories: {
     All: "Все",
@@ -328,6 +331,7 @@ const ru: typeof en = {
       carbs: "Углеводы (г)",
       funFact: "Интересный факт",
       funFactPlaceholder: "Интересный факт, которым поделится маскот",
+      unavailable: "Недоступно (нет в наличии) — дети не смогут заказать это блюдо",
       delete: "Удалить блюдо",
       confirmDelete: 'Удалить «{name}» из меню?',
     },

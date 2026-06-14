@@ -43,8 +43,13 @@ export default function AdminLoginPage() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
-            type="password"
+            type="tel"
             inputMode="numeric"
+            pattern="[0-9]*"
+            autoComplete="one-time-code"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck={false}
             autoFocus
             value={pin}
             onChange={(e) => {
@@ -52,6 +57,7 @@ export default function AdminLoginPage() {
               setError(false);
             }}
             placeholder={t("admin.login.placeholder")}
+            style={{ WebkitTextSecurity: "disc" } as React.CSSProperties}
             className={`rounded-2xl border-2 px-4 py-3 text-center font-heading text-2xl tracking-widest text-eel outline-none transition-colors ${
               error ? "border-cardinal bg-cardinal-50" : "border-cloud bg-cloud focus:border-feather"
             }`}

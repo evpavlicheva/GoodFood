@@ -36,6 +36,8 @@ export interface Dish {
   nameRu?: string;
   /** Russian translation of `mascotTip` (falls back to `mascotTip` if missing) */
   mascotTipRu?: string;
+  /** When false, the dish is shown greyed-out and can't be added to the cart. Defaults to true. */
+  available?: boolean;
 }
 
 export const CATEGORIES: DishCategory[] = [

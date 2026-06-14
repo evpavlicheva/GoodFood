@@ -18,6 +18,7 @@ export interface DishRow {
   carbs: number;
   fun_fact: string;
   image_url: string | null;
+  is_available: boolean;
   created_at: string;
 }
 
@@ -35,6 +36,7 @@ export function rowToDish(row: DishRow): Dish {
     mascotTip: row.mascot_tip,
     mascotTipRu: row.mascot_tip_ru || undefined,
     prepTime: row.prep_time,
+    available: row.is_available ?? true,
     analysis: hasAnalysis
       ? {
           calories: row.calories,
@@ -63,6 +65,7 @@ export function dishToRow(dish: Omit<Dish, "id">): Omit<DishRow, "id" | "created
     carbs: dish.analysis?.carbs ?? 0,
     fun_fact: dish.analysis?.funFact ?? "",
     image_url: dish.image || null,
+    is_available: dish.available ?? true,
   };
 }
 
@@ -79,6 +82,7 @@ export function dishUpdatesToRow(
   if (updates.mascotTip !== undefined) row.mascot_tip = updates.mascotTip;
   if (updates.mascotTipRu !== undefined) row.mascot_tip_ru = updates.mascotTipRu ?? "";
   if (updates.prepTime !== undefined) row.prep_time = updates.prepTime;
+  if (updates.available !== undefined) row.is_available = updates.available;
   if (updates.analysis !== undefined) {
     row.calories = updates.analysis?.calories ?? 0;
     row.protein = updates.analysis?.protein ?? 0;

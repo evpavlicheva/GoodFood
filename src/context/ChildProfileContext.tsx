@@ -28,8 +28,9 @@ interface ChildProfileContextValue {
   switchProfile: (next: ChildProfile) => void;
   /**
    * Remove a profile from `savedProfiles` (by name). If it's the currently
-   * active profile, also clears the active profile so the app falls back to
-   * /setup.
+   * active profile, switch to the next saved profile (if any) so the user
+   * stays on the current screen; only falls back to /setup if no profiles
+   * remain.
    */
   removeProfile: (name: string) => void;
 }
@@ -76,17 +77,29 @@ export function ChildProfileProvider({ children }: { children: ReactNode }) {
     setSavedProfiles(getSavedProfiles());
   }, []);
 
-  const removeProfile = useCallback((name: string) => {
-    removeSavedProfile(name);
-    setSavedProfiles(getSavedProfiles());
-    setProfileState((current) => {
-      if (current && current.name.trim().toLowerCase() === name.trim().toLowerCase()) {
+  const removeProfile = useCallback(
+    (name: string) => {
+      removeSavedProfile(name);
+      const remaining = getSavedProfiles();
+      setSavedProfiles(remaining);
+
+      const isActive = profile && profile.name.trim().toLowerCase() === name.trim().toLowerCase();
+      if (!isActive) return;
+
+      if (remaining.length > 0) {
+        // Removed the active profile but others remain — switch to the next
+        // one in the list so the user stays on the current screen instead
+        // of being bounced to /setup.
+        setChildProfile(remaining[0]);
+        setProfileState(remaining[0]);
+      } else {
+        // No profiles left on this device — fall back to /setup.
         clearChildProfile();
-        return null;
+        setProfileState(null);
       }
-      return current;
-    });
-  }, []);
+    },
+    [profile]
+  );
 
   return (
     <ChildProfileContext.Provider

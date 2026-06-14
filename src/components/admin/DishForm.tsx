@@ -30,6 +30,7 @@ export default function DishForm({ initial, submitLabel, onSubmit, onDelete }: D
   const [mascotTipRu, setMascotTipRu] = useState(initial?.mascotTipRu ?? "");
   const [prepTime, setPrepTime] = useState(initial?.prepTime ?? 10);
   const [image, setImage] = useState(initial?.image ?? "");
+  const [available, setAvailable] = useState(initial?.available ?? true);
   const [analysis, setAnalysis] = useState<DishAnalysis | undefined>(initial?.analysis);
   const [analyzing, setAnalyzing] = useState(false);
 
@@ -96,6 +97,7 @@ export default function DishForm({ initial, submitLabel, onSubmit, onDelete }: D
       prepTime,
       image,
       analysis,
+      available,
     });
   }
 
@@ -126,6 +128,19 @@ export default function DishForm({ initial, submitLabel, onSubmit, onDelete }: D
           </div>
         </div>
       </div>
+
+      {/* Availability */}
+      <label className="flex items-center gap-3 rounded-2xl bg-cloud px-4 py-3">
+        <input
+          type="checkbox"
+          checked={!available}
+          onChange={(e) => setAvailable(!e.target.checked)}
+          className="h-5 w-5 accent-cardinal"
+        />
+        <span className="font-heading text-sm font-extrabold text-eel">
+          {t("admin.dishForm.unavailable")}
+        </span>
+      </label>
 
       {/* Basic info */}
       <div className="grid gap-4 sm:grid-cols-2">

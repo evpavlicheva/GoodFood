@@ -22,8 +22,10 @@ export default function DishCard({ dish }: DishCardProps) {
   const name = getDishName(dish, lang);
   const tip = getDishTip(dish, lang);
   const hasPhoto = Boolean(dish.image) && !imgError;
+  const isAvailable = dish.available ?? true;
 
   function handleAdd() {
+    if (!isAvailable) return;
     addItem({
       dishId: dish.id,
       name: dish.name,
@@ -41,7 +43,7 @@ export default function DishCard({ dish }: DishCardProps) {
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col overflow-hidden rounded-3xl bg-white shadow-card"
     >
-      <div className="relative h-40 w-full bg-cloud">
+      <div className={`relative h-40 w-full bg-cloud ${!isAvailable ? "grayscale" : ""}`}>
         {hasPhoto ? (
           // Plain <img> so admin-uploaded `data:` URLs (from FileReader)
           // work just as well as static files under /public.
@@ -65,9 +67,16 @@ export default function DishCard({ dish }: DishCardProps) {
             🔥 {dish.analysis.calories} {t("menu.kcal")}
           </span>
         )}
+        {!isAvailable && (
+          <div className="absolute inset-0 flex items-center justify-center bg-eel/40">
+            <span className="rounded-full bg-white px-4 py-1.5 text-sm font-extrabold text-eel shadow-card">
+              {t("menu.unavailable")}
+            </span>
+          </div>
+        )}
       </div>
 
-      <div className="flex flex-1 flex-col gap-2 p-4">
+      <div className={`flex flex-1 flex-col gap-2 p-4 ${!isAvailable ? "opacity-60" : ""}`}>
         <h3 className="font-heading text-lg font-extrabold text-eel">{name}</h3>
         <p className="text-sm text-eel-light">{tip}</p>
 
@@ -77,10 +86,11 @@ export default function DishCard({ dish }: DishCardProps) {
               <button
                 key={p}
                 type="button"
+                disabled={!isAvailable}
                 onClick={() => setPortion(p)}
                 className={`rounded-full px-3 py-1 text-sm font-heading font-bold transition-colors ${
                   portion === p ? "bg-feather text-white" : "text-eel-light"
-                }`}
+                } ${!isAvailable ? "cursor-not-allowed" : ""}`}
               >
                 {t(`menu.${p}`)}
               </button>
@@ -89,9 +99,14 @@ export default function DishCard({ dish }: DishCardProps) {
 
           <motion.button
             type="button"
-            whileTap={{ scale: 0.94 }}
+            whileTap={isAvailable ? { scale: 0.94 } : undefined}
             onClick={handleAdd}
-            className="btn-press rounded-2xl bg-feather px-4 py-2 font-heading font-extrabold text-white shadow-duo shadow-feather-700"
+            disabled={!isAvailable}
+            className={`btn-press rounded-2xl px-4 py-2 font-heading font-extrabold shadow-duo ${
+              isAvailable
+                ? "bg-feather text-white shadow-feather-700"
+                : "cursor-not-allowed bg-cloud text-eel-light shadow-none"
+            }`}
           >
             {added ? t("menu.added") : t("menu.addToCart")}
           </motion.button>

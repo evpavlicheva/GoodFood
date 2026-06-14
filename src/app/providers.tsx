@@ -1,0 +1,23 @@
+"use client";
+
+import type { ReactNode } from "react";
+import { CartProvider } from "@/context/CartContext";
+import { OrdersProvider } from "@/context/OrdersContext";
+import { MenuProvider } from "@/context/MenuContext";
+import { LanguageProvider } from "@/context/LanguageContext";
+
+/**
+ * App-wide client providers. Shared by both the child and parent route
+ * groups so admin edits / orders / language are visible everywhere.
+ */
+export default function Providers({ children }: { children: ReactNode }) {
+  return (
+    <LanguageProvider>
+      <MenuProvider>
+        <CartProvider>
+          <OrdersProvider>{children}</OrdersProvider>
+        </CartProvider>
+      </MenuProvider>
+    </LanguageProvider>
+  );
+}

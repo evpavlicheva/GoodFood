@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-feather: #58cc02;
+  --color-macaw: #1cb0f6;
+  --color-bee: #ffc800;
+  --color-fox: #ff9600;
+  --color-cardinal: #ff4b4b;
+  --color-beetle: #ce82ff;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: #f7f7f7;
+  color: #4b4b4b;
+  font-family: var(--font-nunito), ui-sans-serif, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-heading {
+  font-family: var(--font-baloo), ui-rounded, sans-serif;
+}
+
+/* Fun, chunky scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f7f7f7;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d1d1;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b5b5b5;
+}
+
+/* Reusable "press down" effect for chunky Duolingo-style buttons */
+.btn-press {
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.btn-press:active {
+  transform: translateY(4px);
+  box-shadow: none !important;
+}

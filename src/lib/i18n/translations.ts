@@ -1,0 +1,347 @@
+// Translation dictionaries for GoodFood.
+//
+// Usage: const { t } = useLanguage(); t("menu.title")
+// Supports simple {placeholder} interpolation: t("home.greeting", { name: "Max" })
+
+export type Lang = "en" | "ru";
+
+export const LANGUAGES: { code: Lang; label: string; flag: string }[] = [
+  { code: "en", label: "EN", flag: "🇬🇧" },
+  { code: "ru", label: "RU", flag: "🇷🇺" },
+];
+
+const en = {
+  common: {
+    loading: "One sec...",
+    comingSoon: "Coming soon!",
+  },
+  landing: {
+    subtitle:
+      "Yummy adventures, healthy habits, and a mascot who can't wait to meet you! 🥦🍎",
+    cta: "Let's go!",
+  },
+  setup: {
+    nameLabel: "What's your name?",
+    namePlaceholder: "Type your name...",
+    chooseBuddy: "Choose your buddy!",
+    cta: "Let's go!",
+    mascotAskName: "What's your name?",
+    mascotPickBuddy: "Nice to meet you, {name}! Pick your buddy 👇",
+    mascotReady: "Yay, let's go, {name}!",
+  },
+  nav: {
+    home: "Home",
+    menu: "Menu",
+    cart: "Cart",
+    myOrders: "My Orders",
+    history: "History",
+    reports: "Reports",
+    parentMode: "Parent Mode 🔐",
+    backToHome: "← Back to Home",
+  },
+  home: {
+    greeting: "Hi {name}! Ready for a yummy day? 🥳",
+  },
+  menu: {
+    title: "Yummy Menu 🍽️",
+    empty: "No dishes here yet — check back soon!",
+    whole: "Whole",
+    half: "Half",
+    addToCart: "Add to Cart",
+    added: "Added! 🎉",
+    min: "min",
+    kcal: "kcal",
+  },
+  categories: {
+    All: "All",
+    Breakfast: "Breakfast",
+    Main: "Main",
+    Sides: "Sides",
+    Desserts: "Desserts",
+    Drinks: "Drinks",
+    Fruits: "Fruits",
+  },
+  cart: {
+    title: "My Cart 🛒",
+    empty: "Your cart is empty!",
+    browseMenu: "Browse the Menu",
+    summary: "Order Summary",
+    totalItems: "Total items",
+    remove: "Remove",
+    portion: "portion",
+    placeOrder: "Place Order",
+    placingOrder: "Placing order...",
+  },
+  orders: {
+    title: "My Orders 🛒",
+    noOrdersMascot: "No orders yet!",
+    noOrdersText: "Once you place an order, you'll be able to follow along here.",
+    browseMenu: "Browse the Menu",
+    editOrder: "Edit order ✏️",
+    editConfirm: "This will move the order back to your cart so you can change it. Continue?",
+  },
+  status: {
+    preparing: "Accepted and being prepared",
+    ready: "Ready to pick up",
+    completed: "Enjoy your meal!",
+    cancelled: "Cancelled",
+  },
+  history: {
+    title: "History 📜",
+    text: "Past orders and tasty memories will show up here soon!",
+  },
+  reports: {
+    title: "Reports 📊",
+    text: "Fun charts about your healthy choices are on the way!",
+  },
+  admin: {
+    login: {
+      title: "Parent Mode",
+      subtitle: "Enter your PIN to manage GoodFood.",
+      placeholder: "PIN",
+      error: "Hmm, that PIN isn't right. Try again!",
+      submit: "Log in",
+      tip: "Tip: the demo PIN is {pin}.",
+      back: "← Back to Kid Mode",
+    },
+    nav: {
+      brand: "GoodFood",
+      brandSuffix: "Admin",
+      orders: "Orders",
+      menu: "Menu",
+      kidMode: "↩ Kid Mode",
+      logout: "Log out",
+    },
+    dashboard: {
+      title: "Orders 🧾",
+      emptyText: "No orders yet — they'll show up here as soon as kids start ordering.",
+      emptyHeading: "Nothing here yet!",
+      cancel: "Cancel",
+      ordersSoFar: "{count} so far.",
+    },
+    menuManager: {
+      title: "Menu 🍽️",
+      addDish: "+ Add dish",
+      loading: "Loading menu...",
+      edit: "Edit",
+      empty: "No dishes yet — add your first one!",
+      dishesOnMenu: "{count} on the menu.",
+    },
+    dishForm: {
+      photo: "Photo",
+      uploadPhoto: "Upload photo",
+      analyzing: "Analyzing... 🤖",
+      name: "Name (English)",
+      namePlaceholder: "e.g. Veggie Power Pasta",
+      nameRu: "Name (Russian)",
+      nameRuPlaceholder: "e.g. Овощная паста-силач",
+      nameRuHint: "Shown when the app is in Russian. Leave blank to reuse the English name.",
+      category: "Category",
+      emoji: "Emoji",
+      prepTime: "Prep time (minutes)",
+      mascotDescription: "Mascot description (English)",
+      mascotDescriptionPlaceholder: "A short, fun line the mascot says about this dish",
+      mascotDescriptionRu: "Mascot description (Russian)",
+      mascotDescriptionRuPlaceholder: "Короткая весёлая фраза маскота об этом блюде",
+      nutritionTitle: "Nutrition info",
+      nutritionAi: "🤖 (from AI photo analysis — feel free to adjust)",
+      nutritionOptional: "(optional)",
+      calories: "Calories",
+      protein: "Protein (g)",
+      fat: "Fat (g)",
+      carbs: "Carbs (g)",
+      funFact: "Fun fact",
+      funFactPlaceholder: "A fun fact the mascot can share about this dish",
+      delete: "Delete dish",
+      confirmDelete: 'Remove "{name}" from the menu?',
+    },
+    newDish: {
+      title: "Add a new dish 🍽️",
+      back: "← Back to menu",
+      submit: "Add dish",
+    },
+    editDish: {
+      title: "Edit {name} ✏️",
+      back: "← Back to menu",
+      submit: "Save changes",
+      notFound: "We couldn't find that dish.",
+      loading: "Loading...",
+    },
+  },
+};
+
+const ru: typeof en = {
+  common: {
+    loading: "Секундочку...",
+    comingSoon: "Скоро!",
+  },
+  landing: {
+    subtitle:
+      "Вкусные приключения, полезные привычки и маскот, который мечтает познакомиться с тобой! 🥦🍎",
+    cta: "Вперёд!",
+  },
+  setup: {
+    nameLabel: "Как тебя зовут?",
+    namePlaceholder: "Введи своё имя...",
+    chooseBuddy: "Выбери своего друга!",
+    cta: "Вперёд!",
+    mascotAskName: "Как тебя зовут?",
+    mascotPickBuddy: "Приятно познакомиться, {name}! Выбери друга 👇",
+    mascotReady: "Ура, идём, {name}!",
+  },
+  nav: {
+    home: "Главная",
+    menu: "Меню",
+    cart: "Корзина",
+    myOrders: "Мои заказы",
+    history: "История",
+    reports: "Отчёты",
+    parentMode: "Режим родителя 🔐",
+    backToHome: "← На главную",
+  },
+  home: {
+    greeting: "Привет, {name}! Готов(а) к вкусному дню? 🥳",
+  },
+  menu: {
+    title: "Вкусное меню 🍽️",
+    empty: "Здесь пока нет блюд — загляни позже!",
+    whole: "Целая",
+    half: "Половина",
+    addToCart: "В корзину",
+    added: "Добавлено! 🎉",
+    min: "мин",
+    kcal: "ккал",
+  },
+  categories: {
+    All: "Все",
+    Breakfast: "Завтрак",
+    Main: "Основные блюда",
+    Sides: "Гарниры",
+    Desserts: "Десерты",
+    Drinks: "Напитки",
+    Fruits: "Фрукты",
+  },
+  cart: {
+    title: "Моя корзина 🛒",
+    empty: "Корзина пуста!",
+    browseMenu: "Открыть меню",
+    summary: "Итог заказа",
+    totalItems: "Всего блюд",
+    remove: "Удалить",
+    portion: "порция",
+    placeOrder: "Сделать заказ",
+    placingOrder: "Оформляем заказ...",
+  },
+  orders: {
+    title: "Мои заказы 🛒",
+    noOrdersMascot: "Заказов пока нет!",
+    noOrdersText: "Как только ты сделаешь заказ, сможешь следить за ним здесь.",
+    browseMenu: "Открыть меню",
+    editOrder: "Изменить заказ ✏️",
+    editConfirm: "Заказ вернётся в корзину, чтобы ты мог его изменить. Продолжить?",
+  },
+  status: {
+    preparing: "Принят и готовится",
+    ready: "Готово, забирай!",
+    completed: "Приятного аппетита!",
+    cancelled: "Отменён",
+  },
+  history: {
+    title: "История 📜",
+    text: "Здесь скоро появятся прошлые заказы и вкусные воспоминания!",
+  },
+  reports: {
+    title: "Отчёты 📊",
+    text: "Скоро здесь появятся весёлые графики о твоём здоровом питании!",
+  },
+  admin: {
+    login: {
+      title: "Режим родителя",
+      subtitle: "Введите PIN-код для управления GoodFood.",
+      placeholder: "PIN-код",
+      error: "Хм, PIN-код неверный. Попробуйте ещё раз!",
+      submit: "Войти",
+      tip: "Подсказка: демо PIN-код — {pin}.",
+      back: "← Назад в режим ребёнка",
+    },
+    nav: {
+      brand: "GoodFood",
+      brandSuffix: "Админ",
+      orders: "Заказы",
+      menu: "Меню",
+      kidMode: "↩ Режим ребёнка",
+      logout: "Выйти",
+    },
+    dashboard: {
+      title: "Заказы 🧾",
+      emptyText: "Заказов пока нет — они появятся здесь, как только дети начнут заказывать.",
+      emptyHeading: "Здесь пока пусто!",
+      cancel: "Отменить",
+      ordersSoFar: "{count} на данный момент.",
+    },
+    menuManager: {
+      title: "Меню 🍽️",
+      addDish: "+ Добавить блюдо",
+      loading: "Загрузка меню...",
+      edit: "Изменить",
+      empty: "Блюд пока нет — добавьте первое!",
+      dishesOnMenu: "{count} в меню.",
+    },
+    dishForm: {
+      photo: "Фото",
+      uploadPhoto: "Загрузить фото",
+      analyzing: "Анализируем... 🤖",
+      name: "Название (англ.)",
+      namePlaceholder: "например, Veggie Power Pasta",
+      nameRu: "Название (рус.)",
+      nameRuPlaceholder: "например, Овощная паста-силач",
+      nameRuHint: "Показывается, когда приложение на русском. Если оставить пустым — будет использовано английское название.",
+      category: "Категория",
+      emoji: "Эмодзи",
+      prepTime: "Время готовки (мин)",
+      mascotDescription: "Описание от маскота (англ.)",
+      mascotDescriptionPlaceholder: "A short, fun line the mascot says about this dish",
+      mascotDescriptionRu: "Описание от маскота (рус.)",
+      mascotDescriptionRuPlaceholder: "Короткая весёлая фраза маскота об этом блюде",
+      nutritionTitle: "Пищевая ценность",
+      nutritionAi: "🤖 (по данным AI-анализа фото — можно изменить)",
+      nutritionOptional: "(необязательно)",
+      calories: "Калории",
+      protein: "Белки (г)",
+      fat: "Жиры (г)",
+      carbs: "Углеводы (г)",
+      funFact: "Интересный факт",
+      funFactPlaceholder: "Интересный факт, которым поделится маскот",
+      delete: "Удалить блюдо",
+      confirmDelete: 'Удалить «{name}» из меню?',
+    },
+    newDish: {
+      title: "Новое блюдо 🍽️",
+      back: "← Назад в меню",
+      submit: "Добавить блюдо",
+    },
+    editDish: {
+      title: "Изменить {name} ✏️",
+      back: "← Назад в меню",
+      submit: "Сохранить изменения",
+      notFound: "Блюдо не найдено.",
+      loading: "Загрузка...",
+    },
+  },
+};
+
+export const translations = { en, ru };
+
+export type TranslationKey = string;
+
+/**
+ * Russian plural helper: picks the right form based on `n`.
+ * e.g. pluralRu(n, "заказ", "заказа", "заказов")
+ */
+export function pluralRu(n: number, one: string, few: string, many: string): string {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return one;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return few;
+  return many;
+}

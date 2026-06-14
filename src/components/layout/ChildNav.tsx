@@ -25,8 +25,6 @@ export default function ChildNav() {
     { href: "/home", label: t("nav.home"), emoji: "🏠" },
     { href: "/menu", label: t("nav.menu"), emoji: "🍽️", icon: "/icons/menu.png" },
     { href: "/orders", label: t("nav.myOrders"), emoji: "🧾", icon: "/icons/orders.png" },
-    { href: "/history", label: t("nav.history"), emoji: "📜", icon: "/icons/history.png" },
-    { href: "/reports", label: t("nav.reports"), emoji: "📊", icon: "/icons/reports.png" },
   ];
 
   function isActive(href: string) {

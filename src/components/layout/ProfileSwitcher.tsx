@@ -17,9 +17,10 @@ function sameProfile(a: ChildProfile, b: ChildProfile) {
  * lets a sibling sharing this device switch to their own saved profile (or
  * set up a brand new one) without affecting anyone else's data.
  *
- * The panel renders as a full-screen overlay (centered card on larger
- * screens, bottom sheet on phones) so it's never cramped inside the
- * scrollable nav bar — tapping anywhere outside the card closes it.
+ * The panel renders as a small floating card anchored under the avatar
+ * (top-right corner, near the icon that opened it) via fixed positioning —
+ * so it's never clipped by the nav bar's horizontal scroll. An invisible
+ * full-screen backdrop closes it on any outside tap.
  */
 export default function ProfileSwitcher() {
   const router = useRouter();
@@ -57,23 +58,19 @@ export default function ProfileSwitcher() {
 
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            onClick={() => setOpen(false)}
-            className="fixed inset-0 z-50 flex items-end justify-center bg-eel/40 sm:items-center"
-          >
+          <>
+            {/* Invisible full-screen backdrop: tapping anywhere outside the
+                card closes the panel. */}
+            <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 40 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-sm rounded-t-3xl bg-white p-4 shadow-card sm:rounded-3xl sm:p-5"
+              initial={{ opacity: 0, y: -8, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.95 }}
+              transition={{ duration: 0.15 }}
+              className="fixed right-3 top-16 z-50 max-h-[70vh] w-64 overflow-y-auto rounded-2xl bg-white p-3 shadow-card sm:right-6 sm:top-20 sm:w-72"
             >
-              <p className="mb-2 px-1 text-center font-heading text-lg font-extrabold text-eel">
+              <p className="mb-2 px-1 font-heading text-xs font-extrabold uppercase tracking-wide text-eel-light">
                 {t("profileSwitcher.title")}
               </p>
               <ul className="flex flex-col gap-2">
@@ -85,15 +82,15 @@ export default function ProfileSwitcher() {
                       <button
                         type="button"
                         onClick={() => handleSelect(p)}
-                        className={`btn-press flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition-colors ${
+                        className={`btn-press flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition-colors ${
                           isActive ? "bg-feather-50 ring-2 ring-feather" : "bg-cloud hover:bg-cloud/70"
                         }`}
                       >
-                        <span className="relative block h-12 w-12 shrink-0">
-                          <Image src={m.image} alt={m.name} fill sizes="48px" className="object-contain" />
+                        <span className="relative block h-10 w-10 shrink-0">
+                          <Image src={m.image} alt={m.name} fill sizes="40px" className="object-contain" />
                         </span>
                         <span className="flex flex-col leading-tight">
-                          <span className="font-heading text-base font-bold text-eel">{p.name}</span>
+                          <span className="font-heading text-sm font-bold text-eel">{p.name}</span>
                           {isActive && (
                             <span className="text-xs font-bold text-feather">
                               {t("profileSwitcher.current")}
@@ -108,12 +105,12 @@ export default function ProfileSwitcher() {
               <button
                 type="button"
                 onClick={handleAddChild}
-                className="btn-press mt-3 w-full rounded-2xl bg-macaw-50 px-3 py-3 text-center font-heading text-base font-bold text-macaw"
+                className="btn-press mt-2 w-full rounded-2xl bg-macaw-50 px-3 py-2.5 text-center font-heading text-sm font-bold text-macaw"
               >
                 {t("profileSwitcher.addChild")}
               </button>
             </motion.div>
-          </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>

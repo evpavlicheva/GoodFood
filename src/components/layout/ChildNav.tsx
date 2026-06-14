@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -22,10 +23,10 @@ export default function ChildNav() {
 
   const NAV_LINKS = [
     { href: "/home", label: t("nav.home"), emoji: "🏠" },
-    { href: "/menu", label: t("nav.menu"), emoji: "🍽️" },
-    { href: "/orders", label: t("nav.myOrders"), emoji: "🧾" },
-    { href: "/history", label: t("nav.history"), emoji: "📜" },
-    { href: "/reports", label: t("nav.reports"), emoji: "📊" },
+    { href: "/menu", label: t("nav.menu"), emoji: "🍽️", icon: "/icons/menu.png" },
+    { href: "/orders", label: t("nav.myOrders"), emoji: "🧾", icon: "/icons/orders.png" },
+    { href: "/history", label: t("nav.history"), emoji: "📜", icon: "/icons/history.png" },
+    { href: "/reports", label: t("nav.reports"), emoji: "📊", icon: "/icons/reports.png" },
   ];
 
   function isActive(href: string) {
@@ -51,7 +52,13 @@ export default function ChildNav() {
                 isActive(link.href) ? "bg-feather-50 text-feather" : "text-eel-light hover:text-eel"
               }`}
             >
-              <span className="text-base sm:mr-1">{link.emoji}</span>
+              {link.icon ? (
+                <span className="relative inline-block h-5 w-5 align-middle sm:mr-1">
+                  <Image src={link.icon} alt="" fill sizes="20px" className="object-contain" />
+                </span>
+              ) : (
+                <span className="text-base sm:mr-1">{link.emoji}</span>
+              )}
               <span className="hidden sm:inline">{link.label}</span>
             </Link>
           ))}

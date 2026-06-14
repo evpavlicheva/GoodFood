@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import DishCard from "@/components/menu/DishCard";
 import { CATEGORIES, CATEGORY_EMOJI, type DishCategory } from "@/data/dishes";
 import { useMenu } from "@/context/MenuContext";
@@ -19,7 +20,10 @@ export default function MenuPage() {
 
   return (
     <main className="min-h-screen px-6 py-10 pb-28">
-      <h1 className="mb-6 text-center font-heading text-4xl font-extrabold text-feather">
+      <h1 className="mb-6 flex items-center justify-center gap-2 text-center font-heading text-4xl font-extrabold text-feather">
+        <span className="relative block h-10 w-10 shrink-0">
+          <Image src="/icons/menu.png" alt="" fill sizes="40px" className="object-contain" />
+        </span>
         {t("menu.title")}
       </h1>
 

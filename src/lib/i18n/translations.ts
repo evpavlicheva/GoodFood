@@ -51,7 +51,7 @@ const en = {
     greeting: "Hi {name}! Ready for a yummy day? 🥳",
   },
   menu: {
-    title: "Yummy Menu 🍽️",
+    title: "Yummy Menu",
     empty: "No dishes here yet — check back soon!",
     whole: "Whole",
     half: "Half",
@@ -221,7 +221,7 @@ const ru: typeof en = {
     greeting: "Привет, {name}! Готов(а) к вкусному дню? 🥳",
   },
   menu: {
-    title: "Вкусное меню 🍽️",
+    title: "Вкусное меню",
     empty: "Здесь пока нет блюд — загляни позже!",
     whole: "Целая",
     half: "Половина",

@@ -1,15 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import SpeechBubble from "./SpeechBubble";
-import {
-  EMOTION_CONFIG,
-  getEmotionPhrases,
-  getMascot,
-  type MascotEmotion,
-  type MascotId,
-} from "./mascotData";
+import { getEmotionPhrases, getMascot, type MascotEmotion, type MascotId } from "./mascotData";
 import { useLanguage } from "@/context/LanguageContext";
 
 export interface MascotProps {
@@ -37,68 +32,62 @@ const SIZE_CLASSES: Record<NonNullable<MascotProps["size"]>, string> = {
   xl: "h-56 w-56 text-[5.5rem]",
 };
 
-const BADGE_SIZE_CLASSES: Record<NonNullable<MascotProps["size"]>, string> = {
-  sm: "h-7 w-7 text-base -right-1 -top-1",
-  md: "h-9 w-9 text-xl -right-1.5 -top-1.5",
-  lg: "h-11 w-11 text-2xl -right-2 -top-2",
-  xl: "h-14 w-14 text-3xl -right-3 -top-3",
-};
-
-// Per-emotion body animations. Each loops so the mascot always feels alive.
+// Per-emotion body animations. Each loops so the mascot always feels alive —
+// kept gentle (small offsets, slower easing) for a soft bounce rather than a
+// busy wiggle.
 const bodyVariants: Variants = {
   idle: {
-    y: [0, -8, 0],
+    y: [0, -6, 0],
     rotate: 0,
     scale: 1,
-    transition: { duration: 2.6, repeat: Infinity, ease: "easeInOut" },
+    transition: { duration: 3.2, repeat: Infinity, ease: "easeInOut" },
   },
   happy: {
-    y: [0, -14, 0],
-    scale: [1, 1.06, 1],
+    y: [0, -9, 0],
+    scale: [1, 1.03, 1],
     rotate: 0,
-    transition: { duration: 0.7, repeat: Infinity, ease: "easeInOut" },
+    transition: { duration: 1.1, repeat: Infinity, ease: "easeInOut" },
   },
   excited: {
-    rotate: [-6, 6, -6],
-    scale: [1, 1.08, 1],
+    rotate: [-3, 3, -3],
+    scale: [1, 1.04, 1],
     y: [0, -4, 0],
-    transition: { duration: 0.35, repeat: Infinity, ease: "easeInOut" },
+    transition: { duration: 0.6, repeat: Infinity, ease: "easeInOut" },
   },
   surprised: {
-    scale: [1, 1.18, 0.96, 1.05, 1],
-    rotate: [0, -3, 3, 0],
-    y: [0, -6, 0],
-    transition: { duration: 0.6, repeat: Infinity, repeatDelay: 0.6, ease: "easeOut" },
+    scale: [1, 1.08, 0.98, 1.02, 1],
+    rotate: [0, -2, 2, 0],
+    y: [0, -4, 0],
+    transition: { duration: 0.9, repeat: Infinity, repeatDelay: 0.8, ease: "easeOut" },
   },
   thinking: {
-    rotate: [0, -6, 0, 6, 0],
-    y: [0, -3, 0],
+    rotate: [0, -4, 0, 4, 0],
+    y: [0, -2, 0],
     scale: 1,
-    transition: { duration: 2.4, repeat: Infinity, ease: "easeInOut" },
+    transition: { duration: 2.8, repeat: Infinity, ease: "easeInOut" },
   },
   cheering: {
-    y: [0, -26, 0],
-    rotate: [-10, 10, -10],
-    scale: [1, 1.12, 1],
-    transition: { duration: 0.5, repeat: Infinity, ease: "easeOut" },
+    y: [0, -16, 0],
+    rotate: [-5, 5, -5],
+    scale: [1, 1.05, 1],
+    transition: { duration: 0.8, repeat: Infinity, ease: "easeInOut" },
   },
 };
 
 // Soft glow behind the mascot, pulsing gently faster for higher-energy emotions.
 const GLOW_DURATION: Record<MascotEmotion, number> = {
-  idle: 2.6,
-  happy: 1.1,
-  excited: 0.6,
-  surprised: 0.9,
-  thinking: 2.2,
-  cheering: 0.5,
+  idle: 3.2,
+  happy: 1.6,
+  excited: 1,
+  surprised: 1.3,
+  thinking: 2.8,
+  cheering: 0.9,
 };
 
 /**
- * The GoodFood mascot: a big, friendly, animated character with a small
- * emotion badge and an optional speech bubble. Tap it for a quick playful
- * reaction! Visuals are emoji placeholders — swap for real artwork in
- * `public/mascots/` later.
+ * The GoodFood mascot: a big, friendly, animated character with a gentle
+ * idle bounce and an optional speech bubble. Tap it for a quick playful
+ * reaction!
  */
 export default function Mascot({
   mascotId = "broccoli",
@@ -122,7 +111,6 @@ export default function Mascot({
   }, []);
 
   const activeEmotion: MascotEmotion = reacting ? "cheering" : emotion;
-  const emotionConfig = EMOTION_CONFIG[activeEmotion];
 
   // Resolve what (if anything) the speech bubble should say.
   const defaultPhrase = getEmotionPhrases(activeEmotion, lang)[0] ?? null;
@@ -191,24 +179,15 @@ export default function Mascot({
           whileHover={interactive ? { scale: 1.05 } : undefined}
           whileTap={interactive ? { scale: 0.94 } : undefined}
         >
-          <span role="img" aria-label={mascot.name}>
-            {mascot.emoji}
-          </span>
-
-          <AnimatePresence>
-            {emotionConfig.badge && (
-              <motion.span
-                key={activeEmotion}
-                initial={{ opacity: 0, scale: 0, rotate: -20 }}
-                animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                exit={{ opacity: 0, scale: 0 }}
-                transition={{ type: "spring", stiffness: 400, damping: 18 }}
-                className={`absolute flex items-center justify-center rounded-full bg-white shadow-card ${BADGE_SIZE_CLASSES[size]}`}
-              >
-                {emotionConfig.badge}
-              </motion.span>
-            )}
-          </AnimatePresence>
+          <Image
+            src={mascot.image}
+            alt={mascot.name}
+            fill
+            sizes="224px"
+            className="select-none object-contain p-2"
+            priority
+            draggable={false}
+          />
         </motion.div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
+import ProfileSwitcher from "@/components/layout/ProfileSwitcher";
 import { useCart } from "@/context/CartContext";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useLanguage } from "@/context/LanguageContext";
@@ -92,6 +93,7 @@ export default function ChildNav() {
             <span className="sm:hidden">🔐</span>
             <span className="hidden sm:inline">{t("nav.parentMode")}</span>
           </Link>
+          <ProfileSwitcher />
         </div>
       </div>
     </header>

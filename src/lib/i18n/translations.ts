@@ -38,6 +38,12 @@ const en = {
     reports: "Reports",
     parentMode: "Parent Mode 🔐",
     backToHome: "← Back to Home",
+    switchProfile: "Switch user",
+  },
+  profileSwitcher: {
+    title: "Who's playing?",
+    current: "Playing now",
+    addChild: "+ Add a child",
   },
   home: {
     greeting: "Hi {name}! Ready for a yummy day? 🥳",
@@ -198,6 +204,12 @@ const ru: typeof en = {
     reports: "Отчёты",
     parentMode: "Режим родителя 🔐",
     backToHome: "← На главную",
+    switchProfile: "Сменить пользователя",
+  },
+  profileSwitcher: {
+    title: "Кто играет?",
+    current: "Сейчас играет",
+    addChild: "+ Добавить ребёнка",
   },
   home: {
     greeting: "Привет, {name}! Готов(а) к вкусному дню? 🥳",

@@ -27,6 +27,8 @@ export default function ChildLayout({ children }: { children: React.ReactNode })
   const { t } = useLanguage();
   const { profile, isLoading } = useChildProfile();
   const showChrome = pathname !== "/setup" && !!profile;
+  // /home already shows its own large mascot, so skip the floating corner one there.
+  const showFloatingMascot = showChrome && pathname !== "/home";
 
   useEffect(() => {
     if (!isLoading && !profile && pathname !== "/setup") {
@@ -47,7 +49,7 @@ export default function ChildLayout({ children }: { children: React.ReactNode })
       {showChrome && <ChildNav />}
       {children}
 
-      {showChrome && (
+      {showFloatingMascot && (
         <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
           <Mascot mascotId={profile!.mascotId} emotion="idle" message={null} size="xxl" />
         </div>

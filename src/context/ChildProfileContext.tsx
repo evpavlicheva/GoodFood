@@ -12,14 +12,19 @@ import {
   type ChildProfile,
   clearChildProfile,
   getChildProfile,
+  getSavedProfiles,
   setChildProfile,
 } from "@/lib/childProfile";
 
 interface ChildProfileContextValue {
   profile: ChildProfile | null | undefined;
   isLoading: boolean;
+  /** Every profile ever set up on this device (most recently used first). */
+  savedProfiles: ChildProfile[];
   setProfile: (next: ChildProfile) => void;
   clearProfile: () => void;
+  /** Switch the active profile to one of `savedProfiles` without retyping anything. */
+  switchProfile: (next: ChildProfile) => void;
 }
 
 const ChildProfileContext = createContext<ChildProfileContextValue | null>(null);
@@ -33,17 +38,24 @@ const ChildProfileContext = createContext<ChildProfileContextValue | null>(null)
  * shared (child) layout, which kept thinking no profile existed and bounced
  * the user straight back to /setup — an infinite loop. A single provider at
  * the app root keeps every page in sync.
+ *
+ * Also tracks every profile ever set up on this device (`savedProfiles`) so
+ * siblings sharing a tablet can switch back to a previous profile instantly
+ * via `switchProfile`, without retyping their name/buddy.
  */
 export function ChildProfileProvider({ children }: { children: ReactNode }) {
   const [profile, setProfileState] = useState<ChildProfile | null | undefined>(undefined);
+  const [savedProfiles, setSavedProfiles] = useState<ChildProfile[]>([]);
 
   useEffect(() => {
     setProfileState(getChildProfile());
+    setSavedProfiles(getSavedProfiles());
   }, []);
 
   const setProfile = useCallback((next: ChildProfile) => {
     setChildProfile(next);
     setProfileState(next);
+    setSavedProfiles(getSavedProfiles());
   }, []);
 
   const clearProfile = useCallback(() => {
@@ -51,9 +63,22 @@ export function ChildProfileProvider({ children }: { children: ReactNode }) {
     setProfileState(null);
   }, []);
 
+  const switchProfile = useCallback((next: ChildProfile) => {
+    setChildProfile(next);
+    setProfileState(next);
+    setSavedProfiles(getSavedProfiles());
+  }, []);
+
   return (
     <ChildProfileContext.Provider
-      value={{ profile, isLoading: profile === undefined, setProfile, clearProfile }}
+      value={{
+        profile,
+        isLoading: profile === undefined,
+        savedProfiles,
+        setProfile,
+        clearProfile,
+        switchProfile,
+      }}
     >
       {children}
     </ChildProfileContext.Provider>

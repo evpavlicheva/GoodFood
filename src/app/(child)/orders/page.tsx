@@ -13,11 +13,17 @@ import { useLanguage } from "@/context/LanguageContext";
 
 export default function OrdersPage() {
   const router = useRouter();
-  const { orders, removeOrder } = useOrders();
+  const { orders: allOrders, removeOrder } = useOrders();
   const { replaceItems } = useCart();
   const { getDish } = useMenu();
   const { profile } = useChildProfile();
   const { t } = useLanguage();
+
+  // Siblings can share this device, so only show orders placed under the
+  // currently active profile's name.
+  const orders = profile
+    ? allOrders.filter((o) => o.childName.trim().toLowerCase() === profile.name.trim().toLowerCase())
+    : [];
 
   function handleEditOrder(orderId: string) {
     const order = orders.find((o) => o.id === orderId);

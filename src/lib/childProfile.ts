@@ -87,3 +87,18 @@ export function saveProfileToList(profile: ChildProfile): void {
     // ignore storage errors (e.g. quota exceeded)
   }
 }
+
+/**
+ * Removes a profile (matched by name, case-insensitive) from the
+ * saved-profiles list — e.g. when a parent cleans up an old/unused child
+ * profile from the switcher. Does not touch the *active* profile.
+ */
+export function removeSavedProfile(name: string): void {
+  if (typeof window === "undefined") return;
+  const next = getSavedProfiles().filter((p) => p.name.trim().toLowerCase() !== name.trim().toLowerCase());
+  try {
+    window.localStorage.setItem(PROFILES_KEY, JSON.stringify(next));
+  } catch {
+    // ignore storage errors (e.g. quota exceeded)
+  }
+}

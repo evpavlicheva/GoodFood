@@ -25,7 +25,7 @@ function sameProfile(a: ChildProfile, b: ChildProfile) {
 export default function ProfileSwitcher() {
   const router = useRouter();
   const { t } = useLanguage();
-  const { profile, savedProfiles, switchProfile, clearProfile } = useChildProfile();
+  const { profile, savedProfiles, switchProfile, clearProfile, removeProfile } = useChildProfile();
   const [open, setOpen] = useState(false);
 
   if (!profile) return null;
@@ -45,6 +45,11 @@ export default function ProfileSwitcher() {
     router.push("/setup");
   }
 
+  function handleRemove(target: ChildProfile) {
+    if (!window.confirm(t("profileSwitcher.removeConfirm", { name: target.name }))) return;
+    removeProfile(target.name);
+  }
+
   return (
     <>
       <button
@@ -61,7 +66,7 @@ export default function ProfileSwitcher() {
           <>
             {/* Invisible full-screen backdrop: tapping anywhere outside the
                 card closes the panel. */}
-            <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+            <div className="fixed inset-0 z-[45]" onClick={() => setOpen(false)} />
 
             <motion.div
               initial={{ opacity: 0, y: -8, scale: 0.95 }}
@@ -78,25 +83,33 @@ export default function ProfileSwitcher() {
                   const m = getMascot(p.mascotId);
                   const isActive = sameProfile(p, profile);
                   return (
-                    <li key={p.name}>
+                    <li key={p.name} className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => handleSelect(p)}
-                        className={`btn-press flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition-colors ${
+                        className={`btn-press flex min-w-0 flex-1 items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition-colors ${
                           isActive ? "bg-feather-50 ring-2 ring-feather" : "bg-cloud hover:bg-cloud/70"
                         }`}
                       >
                         <span className="relative block h-10 w-10 shrink-0">
                           <Image src={m.image} alt={m.name} fill sizes="40px" className="object-contain" />
                         </span>
-                        <span className="flex flex-col leading-tight">
-                          <span className="font-heading text-sm font-bold text-eel">{p.name}</span>
+                        <span className="flex min-w-0 flex-col leading-tight">
+                          <span className="truncate font-heading text-sm font-bold text-eel">{p.name}</span>
                           {isActive && (
                             <span className="text-xs font-bold text-feather">
                               {t("profileSwitcher.current")}
                             </span>
                           )}
                         </span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleRemove(p)}
+                        aria-label={t("profileSwitcher.removeLabel", { name: p.name })}
+                        className="btn-press flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cloud text-lg text-eel-light transition-colors hover:bg-cardinal-50 hover:text-cardinal"
+                      >
+                        ✕
                       </button>
                     </li>
                   );

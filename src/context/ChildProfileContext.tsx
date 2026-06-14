@@ -13,6 +13,7 @@ import {
   clearChildProfile,
   getChildProfile,
   getSavedProfiles,
+  removeSavedProfile,
   setChildProfile,
 } from "@/lib/childProfile";
 
@@ -25,6 +26,12 @@ interface ChildProfileContextValue {
   clearProfile: () => void;
   /** Switch the active profile to one of `savedProfiles` without retyping anything. */
   switchProfile: (next: ChildProfile) => void;
+  /**
+   * Remove a profile from `savedProfiles` (by name). If it's the currently
+   * active profile, also clears the active profile so the app falls back to
+   * /setup.
+   */
+  removeProfile: (name: string) => void;
 }
 
 const ChildProfileContext = createContext<ChildProfileContextValue | null>(null);
@@ -69,6 +76,18 @@ export function ChildProfileProvider({ children }: { children: ReactNode }) {
     setSavedProfiles(getSavedProfiles());
   }, []);
 
+  const removeProfile = useCallback((name: string) => {
+    removeSavedProfile(name);
+    setSavedProfiles(getSavedProfiles());
+    setProfileState((current) => {
+      if (current && current.name.trim().toLowerCase() === name.trim().toLowerCase()) {
+        clearChildProfile();
+        return null;
+      }
+      return current;
+    });
+  }, []);
+
   return (
     <ChildProfileContext.Provider
       value={{
@@ -78,6 +97,7 @@ export function ChildProfileProvider({ children }: { children: ReactNode }) {
         setProfile,
         clearProfile,
         switchProfile,
+        removeProfile,
       }}
     >
       {children}

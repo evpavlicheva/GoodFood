@@ -44,6 +44,8 @@ const en = {
     title: "Who's playing?",
     current: "Playing now",
     addChild: "+ Add a child",
+    removeLabel: "Remove {name}",
+    removeConfirm: 'Remove "{name}" from this device? This won\'t delete their orders.',
   },
   home: {
     greeting: "Hi {name}! Ready for a yummy day? 🥳",
@@ -210,6 +212,8 @@ const ru: typeof en = {
     title: "Кто играет?",
     current: "Сейчас играет",
     addChild: "+ Добавить ребёнка",
+    removeLabel: "Удалить {name}",
+    removeConfirm: 'Удалить «{name}» с этого устройства? Заказы при этом не удалятся.',
   },
   home: {
     greeting: "Привет, {name}! Готов(а) к вкусному дню? 🥳",

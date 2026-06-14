@@ -1,14 +1,17 @@
 // Mascot definitions and emotion configs for the GoodFood mascot system.
-// Visuals are emoji placeholders for now — swap `emoji` for real
-// illustrations/sprites in `public/mascots/` once they're ready.
+// Each mascot has a real illustration in `public/mascots/` (rendered via
+// next/image) plus an `emoji` fallback used in tiny UI spots (nav badges,
+// demo page) where a full image would be overkill.
 
 export type MascotId = "broccoli" | "carrot" | "apple" | "banana" | "strawberry";
 
 export interface MascotConfig {
   id: MascotId;
   name: string;
-  /** Placeholder visual — replace with <Image src="/mascots/..."> later */
+  /** Small emoji fallback for compact UI (nav links, badges, etc.) */
   emoji: string;
+  /** Illustration shown by the <Mascot> component */
+  image: string;
   /** Soft background behind the mascot */
   bgClass: string;
   /** Color used for the chunky drop-shadow */
@@ -20,6 +23,7 @@ export const MASCOTS: MascotConfig[] = [
     id: "broccoli",
     name: "Brocco",
     emoji: "🥦",
+    image: "/mascots/broccoli.png",
     bgClass: "bg-feather-100",
     shadowClass: "shadow-feather-600",
   },
@@ -27,6 +31,7 @@ export const MASCOTS: MascotConfig[] = [
     id: "carrot",
     name: "Carrie",
     emoji: "🥕",
+    image: "/mascots/carrot.png",
     bgClass: "bg-orange-100",
     shadowClass: "shadow-fox-600",
   },
@@ -34,20 +39,23 @@ export const MASCOTS: MascotConfig[] = [
     id: "apple",
     name: "Appy",
     emoji: "🍎",
+    image: "/mascots/apple.png",
     bgClass: "bg-cardinal-50",
     shadowClass: "shadow-cardinal-600",
   },
   {
     id: "banana",
-    name: "Bananin",
-    emoji: "🍌",
-    bgClass: "bg-bee-50",
-    shadowClass: "shadow-bee-600",
+    name: "Blubby",
+    emoji: "🫐",
+    image: "/mascots/blueberry.png",
+    bgClass: "bg-macaw-50",
+    shadowClass: "shadow-macaw-600",
   },
   {
     id: "strawberry",
     name: "Berry",
     emoji: "🍓",
+    image: "/mascots/strawberry.png",
     bgClass: "bg-beetle-50",
     shadowClass: "shadow-beetle-600",
   },

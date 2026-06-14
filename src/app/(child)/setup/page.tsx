@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Mascot from "@/components/mascot/Mascot";
@@ -63,11 +64,13 @@ export default function SetupPage() {
               type="button"
               onClick={() => setSelected(m.id)}
               whileTap={{ scale: 0.92 }}
-              className={`flex flex-col items-center gap-1 rounded-2xl p-3 text-4xl shadow-card transition-all ${
+              className={`flex flex-col items-center gap-1 rounded-2xl p-3 shadow-card transition-all ${
                 selected === m.id ? `${m.bgClass} ring-4 ring-feather` : "bg-white"
               }`}
             >
-              <span>{m.emoji}</span>
+              <span className="relative block h-12 w-12">
+                <Image src={m.image} alt={m.name} fill sizes="48px" className="object-contain" />
+              </span>
               <span className="font-heading text-xs font-bold text-eel-light">{m.name}</span>
             </motion.button>
           ))}

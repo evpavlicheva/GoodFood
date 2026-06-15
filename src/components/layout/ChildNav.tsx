@@ -34,8 +34,8 @@ export default function ChildNav() {
   return (
     <header className="sticky top-0 z-40 border-b border-cloud bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center gap-1 overflow-x-auto px-3 py-2 sm:gap-2 sm:px-6">
-        <Link href="/home" className="mr-1 flex shrink-0 items-center gap-1.5">
-          <span className="text-2xl">🥦</span>
+        <Link href="/" className="mr-1 flex shrink-0 items-center gap-1.5">
+          <span className="text-4xl">🥦</span>
           <span className="hidden font-heading text-lg font-extrabold text-eel sm:inline">
             GoodFood
           </span>
@@ -51,11 +51,11 @@ export default function ChildNav() {
               }`}
             >
               {link.icon ? (
-                <span className="relative inline-block h-5 w-5 align-middle sm:mr-1">
-                  <Image src={link.icon} alt="" fill sizes="20px" className="object-contain" />
+                <span className="relative inline-block h-[30px] w-[30px] align-middle sm:mr-1">
+                  <Image src={link.icon} alt="" fill sizes="30px" className="object-contain" />
                 </span>
               ) : (
-                <span className="text-base sm:mr-1">{link.emoji}</span>
+                <span className="text-2xl sm:mr-1">{link.emoji}</span>
               )}
               <span className="hidden sm:inline">{link.label}</span>
             </Link>
@@ -68,7 +68,7 @@ export default function ChildNav() {
               isActive("/cart") ? "bg-feather-50 text-feather" : "text-eel-light hover:text-eel"
             }`}
           >
-            <span className="relative inline-flex text-base sm:mr-1">
+            <span className="relative inline-flex text-2xl sm:mr-1">
               🛒
               <AnimatePresence>
                 {totalCount > 0 && (

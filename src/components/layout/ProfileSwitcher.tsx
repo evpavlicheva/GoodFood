@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { getMascot } from "@/components/mascot/mascotData";
 import { useChildProfile, type ChildProfile } from "@/hooks/useChildProfile";
+import { requestNewProfileSetup } from "@/lib/childProfile";
 import { useLanguage } from "@/context/LanguageContext";
 
 function sameProfile(a: ChildProfile, b: ChildProfile) {
@@ -41,6 +42,7 @@ export default function ProfileSwitcher() {
 
   function handleAddChild() {
     setOpen(false);
+    requestNewProfileSetup();
     clearProfile();
     router.push("/setup");
   }

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -65,10 +66,10 @@ const STEPS = [
 /**
  * Splash / intro screen — the very first thing the app shows.
  *
- * Composed from separate layers (background wash, headline text, Play
- * button, character illustration crops with a connecting arrow, and a
- * "how it works" flow) so it adapts cleanly across phone, tablet and
- * desktop instead of relying on one flat photo.
+ * Composed from separate layers (background wash, headline text, character
+ * illustration crops, a Play button, and a "how it works" flow) so it
+ * adapts cleanly across phone, tablet and desktop instead of relying on
+ * one flat photo.
  */
 export default function HomePage() {
   const { t } = useLanguage();
@@ -87,46 +88,8 @@ export default function HomePage() {
         </p>
       </div>
 
-      {/* Button layer */}
-      <Link
-        href="/setup"
-        className="btn-press flex items-center gap-2 rounded-full border-2 border-[#8BA659] bg-[#FEF5EE]/90 px-8 py-3.5 font-heading text-lg font-extrabold uppercase tracking-wide text-[#5C7A36] shadow-card backdrop-blur-md transition-colors hover:bg-[#FEF5EE] sm:px-10 sm:py-4 sm:text-xl"
-      >
-        <span className="text-xl leading-none sm:text-2xl">▶</span>
-        {t("landing.play")}
-      </Link>
-
-      {/* Illustration layer, with a dashed "sending" arrow arcing from the
-          carrot mum to the kids */}
+      {/* Illustration layer */}
       <div className="relative mt-4 flex w-full max-w-xl items-center justify-center gap-3 sm:gap-5">
-        <svg
-          viewBox="0 0 400 110"
-          preserveAspectRatio="none"
-          className="pointer-events-none absolute -top-14 left-0 z-10 h-16 w-full sm:-top-16 sm:h-20"
-          aria-hidden="true"
-        >
-          <defs>
-            <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="3" refY="3" orient="auto">
-              <path d="M0,0 L6,3 L0,6 Z" fill="#5C7A36" />
-            </marker>
-          </defs>
-          <path
-            d="M60,95 C 90,15 290,5 335,75"
-            fill="none"
-            stroke="#5C7A36"
-            strokeWidth="4"
-            strokeLinecap="round"
-            strokeDasharray="2 12"
-            markerEnd="url(#arrowhead)"
-          />
-        </svg>
-        <span
-          className="absolute -top-20 left-[10%] z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 sm:-top-24 sm:h-10 sm:w-10"
-          style={{ borderColor: GREEN, backgroundColor: CREAM }}
-        >
-          <span className="text-base sm:text-lg">📸</span>
-        </span>
-
         <div className="relative aspect-square w-[44%] max-w-[260px] shrink-0 overflow-hidden rounded-3xl shadow-card sm:w-1/2">
           <Image
             src="/screen/splash-left.jpg"
@@ -155,6 +118,20 @@ export default function HomePage() {
           />
         </div>
       </div>
+
+      {/* Button layer */}
+      <motion.div
+        animate={{ y: [0, -10, 0] }}
+        transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 2.4, ease: "easeInOut" }}
+      >
+        <Link
+          href="/setup"
+          className="btn-press flex items-center gap-2 rounded-full border-2 border-[#8BA659] bg-[#FEF5EE]/90 px-8 py-3.5 font-heading text-lg font-extrabold uppercase tracking-wide text-[#5C7A36] shadow-card backdrop-blur-md transition-colors hover:bg-[#FEF5EE] sm:px-10 sm:py-4 sm:text-xl"
+        >
+          <span className="text-xl leading-none sm:text-2xl">▶</span>
+          {t("landing.play")}
+        </Link>
+      </motion.div>
 
       {/* Flow steps layer */}
       <div className="flex w-full max-w-2xl flex-col gap-2 sm:flex-row sm:gap-3">

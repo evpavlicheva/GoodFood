@@ -17,7 +17,7 @@ const en = {
   },
   landing: {
     headline: "Easy Food",
-    subtitle: "Interactive Food Game for Picky Eaters",
+    subtitle: "Turn Mealtime into a Game for Picky Eaters",
     cta: "Let's go!",
     play: "Play",
     step: "Step {n}",
@@ -35,6 +35,9 @@ const en = {
     mascotAskName: "What's your name?",
     mascotPickBuddy: "Nice to meet you, {name}! Pick your buddy 👇",
     mascotReady: "Yay, let's go, {name}!",
+    whoIsHere: "Who is here?",
+    choosePlayer: "Choose a player",
+    addNew: "+ Add a new player",
   },
   nav: {
     home: "Home",
@@ -134,6 +137,8 @@ const en = {
       emptyHeading: "Nothing here yet!",
       cancel: "Cancel",
       ordersSoFar: "{count} so far.",
+      delete: "Delete",
+      deleteConfirm: "Permanently delete this cancelled order? This can't be undone.",
     },
     menuManager: {
       title: "Menu 🍽️",
@@ -194,7 +199,7 @@ const ru: typeof en = {
   },
   landing: {
     headline: "Easy Food",
-    subtitle: "Интерактивная игра про еду для маленьких приверед",
+    subtitle: "Превращаем еду в игру для маленьких приверед",
     cta: "Вперёд!",
     play: "Играть",
     step: "Шаг {n}",
@@ -212,6 +217,9 @@ const ru: typeof en = {
     mascotAskName: "Как тебя зовут?",
     mascotPickBuddy: "Приятно познакомиться, {name}! Выбери друга 👇",
     mascotReady: "Ура, идём, {name}!",
+    whoIsHere: "Кто здесь?",
+    choosePlayer: "Выбрать игрока",
+    addNew: "+ Добавить нового игрока",
   },
   nav: {
     home: "Главная",
@@ -311,6 +319,8 @@ const ru: typeof en = {
       emptyHeading: "Здесь пока пусто!",
       cancel: "Отменить",
       ordersSoFar: "{count} на данный момент.",
+      delete: "Удалить",
+      deleteConfirm: "Удалить этот отменённый заказ навсегда? Это действие нельзя отменить.",
     },
     menuManager: {
       title: "Меню 🍽️",

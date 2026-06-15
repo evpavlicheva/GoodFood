@@ -7,6 +7,7 @@ export interface ChildProfile {
 
 const STORAGE_KEY = "goodfood:child-profile";
 const PROFILES_KEY = "goodfood:child-profiles";
+const ADD_NEW_FLAG_KEY = "goodfood:setup-add-new";
 
 /**
  * Local-storage backed profile for the child user. This is a temporary
@@ -100,5 +101,32 @@ export function removeSavedProfile(name: string): void {
     window.localStorage.setItem(PROFILES_KEY, JSON.stringify(next));
   } catch {
     // ignore storage errors (e.g. quota exceeded)
+  }
+}
+
+/**
+ * Marks that the next visit to /setup should go straight to the "add a new
+ * player" name/mascot form, even if saved profiles exist (used by the
+ * profile switcher's "Add a child" button — without this, /setup would
+ * just show the "Who is here?" picker again).
+ */
+export function requestNewProfileSetup(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem(ADD_NEW_FLAG_KEY, "1");
+  } catch {
+    // ignore storage errors
+  }
+}
+
+/** Reads and clears the "add new player" flag set by `requestNewProfileSetup`. */
+export function consumeNewProfileSetupFlag(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const flag = window.sessionStorage.getItem(ADD_NEW_FLAG_KEY);
+    if (flag) window.sessionStorage.removeItem(ADD_NEW_FLAG_KEY);
+    return !!flag;
+  } catch {
+    return false;
   }
 }

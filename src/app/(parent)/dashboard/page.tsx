@@ -18,8 +18,13 @@ function formatDateTime(iso: string) {
 }
 
 export default function AdminDashboardPage() {
-  const { orders, updateOrderStatus } = useOrders();
+  const { orders, updateOrderStatus, removeOrder } = useOrders();
   const { t, lang } = useLanguage();
+
+  function handleDelete(orderId: string) {
+    if (!window.confirm(t("admin.dashboard.deleteConfirm"))) return;
+    removeOrder(orderId);
+  }
 
   const ordersWord =
     lang === "ru"
@@ -105,6 +110,15 @@ export default function AdminDashboardPage() {
                   >
                     ❌ {t("admin.dashboard.cancel")}
                   </button>
+                  {order.status === "cancelled" && (
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(order.id)}
+                      className="btn-press rounded-xl bg-cardinal-50 px-3 py-2 text-sm font-heading font-bold text-cardinal transition-colors hover:bg-cardinal hover:text-white"
+                    >
+                      🗑️ {t("admin.dashboard.delete")}
+                    </button>
+                  )}
                 </div>
               </motion.div>
             );

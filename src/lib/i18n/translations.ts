@@ -16,9 +16,10 @@ const en = {
     comingSoon: "Coming soon!",
   },
   landing: {
-    subtitle:
-      "Yummy adventures, healthy habits, and a mascot who can't wait to meet you! 🥦🍎",
+    headline: "Mealtimes made easy!",
+    subtitle: "Let them choose, play, and eat healthy with Yummy Menu",
     cta: "Let's go!",
+    play: "Play",
   },
   setup: {
     nameLabel: "What's your name?",
@@ -186,9 +187,10 @@ const ru: typeof en = {
     comingSoon: "Скоро!",
   },
   landing: {
-    subtitle:
-      "Вкусные приключения, полезные привычки и маскот, который мечтает познакомиться с тобой! 🥦🍎",
+    headline: "Время еды — без хлопот!",
+    subtitle: "Пусть выбирают, играют и едят полезно с Yummy Menu",
     cta: "Вперёд!",
+    play: "Играть",
   },
   setup: {
     nameLabel: "Как тебя зовут?",

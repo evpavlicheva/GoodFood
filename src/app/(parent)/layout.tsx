@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import AdminNav from "@/components/admin/AdminNav";
+import OrderPlacedListener from "@/components/notifications/OrderPlacedListener";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -39,6 +40,7 @@ export default function ParentLayout({ children }: { children: React.ReactNode }
   return (
     <div className="min-h-screen bg-cloud">
       <AdminNav />
+      <OrderPlacedListener />
       {children}
     </div>
   );

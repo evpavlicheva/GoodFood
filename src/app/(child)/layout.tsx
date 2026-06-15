@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Mascot from "@/components/mascot/Mascot";
 import ChildNav from "@/components/layout/ChildNav";
+import ReminderOverlay from "@/components/notifications/ReminderOverlay";
+import NotificationsPrompt from "@/components/notifications/NotificationsPrompt";
 import { useChildProfile } from "@/hooks/useChildProfile";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -53,6 +55,13 @@ export default function ChildLayout({ children }: { children: React.ReactNode })
         <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
           <Mascot mascotId={profile!.mascotId} emotion="idle" message={null} size="xxl" />
         </div>
+      )}
+
+      {showChrome && (
+        <>
+          <ReminderOverlay />
+          <NotificationsPrompt role="child" profileName={profile!.name} />
+        </>
       )}
     </div>
   );

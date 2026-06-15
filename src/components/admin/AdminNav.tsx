@@ -15,6 +15,7 @@ export default function AdminNav() {
   const NAV_LINKS = [
     { href: "/dashboard", label: t("admin.nav.orders"), emoji: "🧾" },
     { href: "/menu-manager", label: t("admin.nav.menu"), emoji: "🍽️" },
+    { href: "/notifications", label: t("admin.nav.notifications"), emoji: "🔔" },
   ];
 
   function handleLogout() {

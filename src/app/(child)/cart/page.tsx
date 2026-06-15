@@ -46,6 +46,21 @@ export default function CartPage() {
       profile?.name ?? "Friend"
     );
     if (coinsToEarn > 0) addCoins(coinsToEarn);
+
+    // Best-effort: let the parent know via push. Fine if this fails (e.g.
+    // push isn't configured, or the parent hasn't enabled notifications).
+    const name = profile?.name ?? "Friend";
+    fetch("/api/push/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        role: "parent",
+        kind: "order_placed",
+        title: t("notifications.orderPlaced.title"),
+        body: t("notifications.orderPlaced.body", { name }),
+      }),
+    }).catch(() => {});
+
     clearCart();
     router.push("/orders");
   }

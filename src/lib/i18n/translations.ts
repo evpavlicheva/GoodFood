@@ -16,8 +16,8 @@ const en = {
     comingSoon: "Coming soon!",
   },
   landing: {
-    headline: "Mealtimes made easy!",
-    subtitle: "Let them choose, play, and eat healthy with Yummy Menu",
+    headline: "Easy Food",
+    subtitle: "Interactive Food Game for Picky Eaters",
     cta: "Let's go!",
     play: "Play",
   },
@@ -187,8 +187,8 @@ const ru: typeof en = {
     comingSoon: "Скоро!",
   },
   landing: {
-    headline: "Время еды — без хлопот!",
-    subtitle: "Пусть выбирают, играют и едят полезно с Yummy Menu",
+    headline: "Easy Food",
+    subtitle: "Интерактивная игра про еду для маленьких приверед",
     cta: "Вперёд!",
     play: "Играть",
   },

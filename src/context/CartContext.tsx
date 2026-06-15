@@ -21,12 +21,22 @@ export interface CartItem {
   image: string;
   portion: Portion;
   quantity: number;
+  /**
+   * Coin value of one portion of this dish — how many coins it earns (for
+   * healthy dishes) when the order is placed, or how many coins it costs
+   * (for Snacks) which were already deducted when this line was added.
+   */
+  coinValue: number;
+  /** Whether this line is a Snacks-category treat (coins are spent, not earned). */
+  isSnack: boolean;
 }
 
 interface CartContextValue {
   items: CartItem[];
   addItem: (item: Omit<CartItem, "quantity">) => void;
   removeItem: (dishId: string, portion: Portion) => void;
+  /** Set the quantity of a line item directly; removes the line if quantity <= 0. */
+  updateQuantity: (dishId: string, portion: Portion, quantity: number) => void;
   clearCart: () => void;
   /** Replace the whole cart at once — used when editing a placed order. */
   replaceItems: (items: CartItem[]) => void;
@@ -141,6 +151,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) => prev.filter((i) => !(i.dishId === dishId && i.portion === portion)));
   }, []);
 
+  const updateQuantity = useCallback((dishId: string, portion: Portion, quantity: number) => {
+    setItems((prev) => {
+      if (quantity <= 0) {
+        return prev.filter((i) => !(i.dishId === dishId && i.portion === portion));
+      }
+      return prev.map((i) =>
+        i.dishId === dishId && i.portion === portion ? { ...i, quantity } : i
+      );
+    });
+  }, []);
+
   const clearCart = useCallback(() => setItems([]), []);
 
   const replaceItems = useCallback((newItems: CartItem[]) => setItems(newItems), []);
@@ -149,7 +170,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   return (
     <CartContext.Provider
-      value={{ items, addItem, removeItem, clearCart, replaceItems, totalCount }}
+      value={{ items, addItem, removeItem, updateQuantity, clearCart, replaceItems, totalCount }}
     >
       {children}
     </CartContext.Provider>

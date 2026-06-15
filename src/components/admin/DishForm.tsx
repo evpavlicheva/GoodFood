@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
-import { CATEGORIES, type Dish, type DishAnalysis, type DishCategory } from "@/data/dishes";
+import { CATEGORIES, DEFAULT_COIN_VALUE, type Dish, type DishAnalysis, type DishCategory } from "@/data/dishes";
 import { analyzeDishPhoto } from "@/lib/ai/analyzeDish";
 import { resizeImageDataUrl } from "@/lib/image";
 import { uploadDishImage } from "@/lib/supabase/storage";
@@ -29,6 +29,9 @@ export default function DishForm({ initial, submitLabel, onSubmit, onDelete }: D
   const [mascotTip, setMascotTip] = useState(initial?.mascotTip ?? "");
   const [mascotTipRu, setMascotTipRu] = useState(initial?.mascotTipRu ?? "");
   const [prepTime, setPrepTime] = useState(initial?.prepTime ?? 10);
+  const [coinValue, setCoinValue] = useState(
+    initial?.coinValue ?? DEFAULT_COIN_VALUE[initial?.category ?? CATEGORIES[0]]
+  );
   const [image, setImage] = useState(initial?.image ?? "");
   const [available, setAvailable] = useState(initial?.available ?? true);
   const [analysis, setAnalysis] = useState<DishAnalysis | undefined>(initial?.analysis);
@@ -95,6 +98,7 @@ export default function DishForm({ initial, submitLabel, onSubmit, onDelete }: D
       mascotTip,
       mascotTipRu: mascotTipRu.trim() || undefined,
       prepTime,
+      coinValue,
       image,
       analysis,
       available,
@@ -213,6 +217,23 @@ export default function DishForm({ initial, submitLabel, onSubmit, onDelete }: D
             onChange={(e) => setPrepTime(Number(e.target.value) || 0)}
             className="w-full rounded-xl border-2 border-cloud bg-cloud px-3 py-2 text-eel outline-none focus:border-feather"
           />
+        </div>
+
+        <div>
+          <label className="mb-1 block font-heading text-sm font-extrabold text-eel">
+            {category === "Snacks" ? t("admin.dishForm.coinPrice") : t("admin.dishForm.coinValue")} 🪙
+          </label>
+          <input
+            type="number"
+            min={1}
+            max={category === "Snacks" ? 20 : 3}
+            value={coinValue}
+            onChange={(e) => setCoinValue(Number(e.target.value) || 1)}
+            className="w-full rounded-xl border-2 border-cloud bg-cloud px-3 py-2 text-eel outline-none focus:border-feather"
+          />
+          <p className="mt-1 text-xs text-eel-light">
+            {category === "Snacks" ? t("admin.dishForm.coinPriceHint") : t("admin.dishForm.coinValueHint")}
+          </p>
         </div>
       </div>
 

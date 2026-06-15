@@ -7,7 +7,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import Mascot from "@/components/mascot/Mascot";
 import Button from "@/components/ui/Button";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
-import { MASCOTS, getMascot, type MascotId, type MascotEmotion } from "@/components/mascot/mascotData";
+import {
+  DEFAULT_UNLOCKED_MASCOTS,
+  MASCOTS,
+  getMascot,
+  type MascotId,
+  type MascotEmotion,
+} from "@/components/mascot/mascotData";
 import { useChildProfile } from "@/hooks/useChildProfile";
 import { consumeNewProfileSetupFlag, type ChildProfile } from "@/lib/childProfile";
 import { useLanguage } from "@/context/LanguageContext";
@@ -57,7 +63,12 @@ export default function SetupPage() {
 
   function handleContinue() {
     if (!selected || !canContinue) return;
-    setProfile({ name: trimmedName, mascotId: selected });
+    setProfile({
+      name: trimmedName,
+      mascotId: selected,
+      coins: 0,
+      unlockedMascots: Array.from(new Set([...DEFAULT_UNLOCKED_MASCOTS, selected])),
+    });
     router.push("/home");
   }
 

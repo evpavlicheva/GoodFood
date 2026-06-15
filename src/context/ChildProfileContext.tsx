@@ -16,6 +16,7 @@ import {
   removeSavedProfile,
   setChildProfile,
 } from "@/lib/childProfile";
+import { getMascot, type MascotId } from "@/components/mascot/mascotData";
 
 interface ChildProfileContextValue {
   profile: ChildProfile | null | undefined;
@@ -33,6 +34,12 @@ interface ChildProfileContextValue {
    * remain.
    */
   removeProfile: (name: string) => void;
+  /** Award coins to the active profile (e.g. when an order is placed). */
+  addCoins: (amount: number) => void;
+  /** Spend coins from the active profile if affordable. Returns false if not enough coins. */
+  spendCoins: (amount: number) => boolean;
+  /** Unlock a mascot buddy for the active profile if affordable (or already unlocked). Returns false if not enough coins. */
+  unlockMascot: (mascotId: MascotId) => boolean;
 }
 
 const ChildProfileContext = createContext<ChildProfileContextValue | null>(null);
@@ -101,6 +108,49 @@ export function ChildProfileProvider({ children }: { children: ReactNode }) {
     [profile]
   );
 
+  const addCoins = useCallback(
+    (amount: number) => {
+      if (!profile || amount <= 0) return;
+      const next = { ...profile, coins: profile.coins + amount };
+      setChildProfile(next);
+      setProfileState(next);
+      setSavedProfiles(getSavedProfiles());
+    },
+    [profile]
+  );
+
+  const spendCoins = useCallback(
+    (amount: number): boolean => {
+      if (!profile || amount <= 0) return false;
+      if (profile.coins < amount) return false;
+      const next = { ...profile, coins: profile.coins - amount };
+      setChildProfile(next);
+      setProfileState(next);
+      setSavedProfiles(getSavedProfiles());
+      return true;
+    },
+    [profile]
+  );
+
+  const unlockMascot = useCallback(
+    (mascotId: MascotId): boolean => {
+      if (!profile) return false;
+      if (profile.unlockedMascots.includes(mascotId)) return true;
+      const cost = getMascot(mascotId).cost;
+      if (profile.coins < cost) return false;
+      const next = {
+        ...profile,
+        coins: profile.coins - cost,
+        unlockedMascots: [...profile.unlockedMascots, mascotId],
+      };
+      setChildProfile(next);
+      setProfileState(next);
+      setSavedProfiles(getSavedProfiles());
+      return true;
+    },
+    [profile]
+  );
+
   return (
     <ChildProfileContext.Provider
       value={{
@@ -111,6 +161,9 @@ export function ChildProfileProvider({ children }: { children: ReactNode }) {
         clearProfile,
         switchProfile,
         removeProfile,
+        addCoins,
+        spendCoins,
+        unlockMascot,
       }}
     >
       {children}

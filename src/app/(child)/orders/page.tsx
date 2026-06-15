@@ -40,6 +40,8 @@ export default function OrdersPage() {
           image: dish?.image ?? "",
           portion: item.portion,
           quantity: item.quantity,
+          coinValue: item.coinValue,
+          isSnack: item.isSnack,
         };
       })
     );

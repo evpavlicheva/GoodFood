@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { getDishName, getDishTip, type Dish } from "@/data/dishes";
+import { AnimatePresence, motion } from "framer-motion";
+import { getCoinValue, getDishName, getDishTip, isSnack as isSnackDish, type Dish } from "@/data/dishes";
 import { useCart, type Portion } from "@/context/CartContext";
+import { useChildProfile } from "@/context/ChildProfileContext";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface DishCardProps {
@@ -16,22 +17,38 @@ export default function DishCard({ dish }: DishCardProps) {
   const [imgError, setImgError] = useState(false);
   const [portion, setPortion] = useState<Portion>("whole");
   const [added, setAdded] = useState(false);
-  const { addItem } = useCart();
+  const [showCoinMessage, setShowCoinMessage] = useState(false);
+  const { items, addItem } = useCart();
+  const { spendCoins } = useChildProfile();
   const { t, lang } = useLanguage();
 
   const name = getDishName(dish, lang);
   const tip = getDishTip(dish, lang);
   const hasPhoto = Boolean(dish.image) && !imgError;
   const isAvailable = dish.available ?? true;
+  const snack = isSnackDish(dish);
+  const coinValue = getCoinValue(dish);
+  const inCart = items.some((i) => i.dishId === dish.id && i.quantity > 0);
 
   function handleAdd() {
     if (!isAvailable) return;
+
+    if (snack) {
+      if (!spendCoins(coinValue)) {
+        setShowCoinMessage(true);
+        setTimeout(() => setShowCoinMessage(false), 2400);
+        return;
+      }
+    }
+
     addItem({
       dishId: dish.id,
       name: dish.name,
       emoji: dish.emoji,
       image: dish.image,
       portion,
+      coinValue,
+      isSnack: snack,
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 1200);
@@ -59,12 +76,19 @@ export default function DishCard({ dish }: DishCardProps) {
             {dish.emoji}
           </div>
         )}
+        <span
+          className={`absolute left-3 top-3 rounded-full px-3 py-1 text-sm font-extrabold shadow-card ${
+            snack ? "bg-bee-50 text-bee-700" : "bg-feather-50 text-feather-700"
+          }`}
+        >
+          {snack ? t("menu.coinsCost", { count: coinValue }) : t("menu.earnCoins", { count: coinValue })}
+        </span>
         <span className="absolute right-3 top-3 rounded-full bg-white px-3 py-1 text-sm font-extrabold text-eel shadow-card">
           ⏱ {dish.prepTime} {t("menu.min")}
         </span>
-        {dish.analysis && (
-          <span className="absolute left-3 top-3 rounded-full bg-white px-3 py-1 text-sm font-extrabold text-feather shadow-card">
-            🔥 {dish.analysis.calories} {t("menu.kcal")}
+        {inCart && (
+          <span className="absolute bottom-3 right-3 rounded-full bg-feather px-3 py-1 text-xs font-extrabold text-white shadow-card">
+            {t("menu.inCartBadge")}
           </span>
         )}
         {!isAvailable && (
@@ -79,6 +103,19 @@ export default function DishCard({ dish }: DishCardProps) {
       <div className={`flex flex-1 flex-col gap-2 p-4 ${!isAvailable ? "opacity-60" : ""}`}>
         <h3 className="font-heading text-lg font-extrabold text-eel">{name}</h3>
         <p className="text-sm text-eel-light">{tip}</p>
+
+        <AnimatePresence>
+          {showCoinMessage && (
+            <motion.p
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="text-sm font-bold text-cardinal"
+            >
+              {t("menu.needMoreCoins")}
+            </motion.p>
+          )}
+        </AnimatePresence>
 
         <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-2">
           <div className="flex rounded-full bg-cloud p-1">

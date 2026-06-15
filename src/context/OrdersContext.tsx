@@ -21,6 +21,10 @@ export interface OrderItem {
   emoji: string;
   portion: Portion;
   quantity: number;
+  /** Coin value per portion — earned (healthy dishes) or already spent (snacks). */
+  coinValue: number;
+  /** Whether this line is a Snacks-category treat. */
+  isSnack: boolean;
 }
 
 export interface Order {
@@ -139,12 +143,14 @@ export function OrdersProvider({ children }: { children: ReactNode }) {
     const order: Order = {
       id: `order_${Date.now()}`,
       childName,
-      items: items.map(({ dishId, name, emoji, portion, quantity }) => ({
+      items: items.map(({ dishId, name, emoji, portion, quantity, coinValue, isSnack }) => ({
         dishId,
         name,
         emoji,
         portion,
         quantity,
+        coinValue,
+        isSnack,
       })),
       status: "preparing",
       mascotMessage,

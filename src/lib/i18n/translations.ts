@@ -57,8 +57,15 @@ const en = {
     removeLabel: "Remove {name}",
     removeConfirm: 'Remove "{name}" from this device? This won\'t delete their orders.',
   },
+  coins: {
+    balanceLabel: "My Coins",
+  },
   home: {
     greeting: "Hi {name}! Ready for a yummy day? 🥳",
+    myBuddies: "My Buddies",
+    unlockFor: "{count} 🪙 to unlock",
+    unlocked: "🎉 {name} unlocked!",
+    needMoreToUnlock: "Earn {count} more 🪙 to unlock {name}!",
   },
   menu: {
     title: "Yummy Menu",
@@ -70,6 +77,10 @@ const en = {
     min: "min",
     kcal: "kcal",
     unavailable: "Not available right now",
+    earnCoins: "+{count} 🪙",
+    coinsCost: "{count} 🪙",
+    inCartBadge: "In Cart ✅",
+    needMoreCoins: "Eat something healthy first to earn coins, then come back for this treat! 🥦🪙",
   },
   categories: {
     All: "All",
@@ -79,6 +90,7 @@ const en = {
     Desserts: "Desserts",
     Drinks: "Drinks",
     Fruits: "Fruits",
+    Snacks: "Snacks",
   },
   cart: {
     title: "My Cart 🛒",
@@ -90,6 +102,9 @@ const en = {
     portion: "portion",
     placeOrder: "Place Order",
     placingOrder: "Placing order...",
+    increase: "Increase quantity",
+    decrease: "Decrease quantity",
+    coinsEarned: "You'll earn {count} 🪙 with this order!",
   },
   orders: {
     title: "My Orders 🛒",
@@ -174,6 +189,10 @@ const en = {
       funFact: "Fun fact",
       funFactPlaceholder: "A fun fact the mascot can share about this dish",
       unavailable: "Unavailable (out of stock) — kids won't be able to order this dish",
+      coinValue: "Coins earned (1-3)",
+      coinValueHint: "How many coins kids earn for choosing this healthy dish.",
+      coinPrice: "Coin price (1-20)",
+      coinPriceHint: "How many coins this treat costs in the Snacks shop.",
       delete: "Delete dish",
       confirmDelete: 'Remove "{name}" from the menu?',
     },
@@ -239,8 +258,15 @@ const ru: typeof en = {
     removeLabel: "Удалить {name}",
     removeConfirm: 'Удалить «{name}» с этого устройства? Заказы при этом не удалятся.',
   },
+  coins: {
+    balanceLabel: "Монетки",
+  },
   home: {
     greeting: "Привет, {name}! Готов(а) к вкусному дню? 🥳",
+    myBuddies: "Мои друзья",
+    unlockFor: "{count} 🪙 чтобы открыть",
+    unlocked: "🎉 {name} открыт!",
+    needMoreToUnlock: "Заработай ещё {count} 🪙, чтобы открыть {name}!",
   },
   menu: {
     title: "Вкусное меню",
@@ -252,6 +278,10 @@ const ru: typeof en = {
     min: "мин",
     kcal: "ккал",
     unavailable: "Сейчас недоступно",
+    earnCoins: "+{count} 🪙",
+    coinsCost: "{count} 🪙",
+    inCartBadge: "В корзине ✅",
+    needMoreCoins: "Сначала съешь что-нибудь полезное и заработай монетки, тогда сможешь купить вкусняшку! 🥦🪙",
   },
   categories: {
     All: "Все",
@@ -261,6 +291,7 @@ const ru: typeof en = {
     Desserts: "Десерты",
     Drinks: "Напитки",
     Fruits: "Фрукты",
+    Snacks: "Снеки",
   },
   cart: {
     title: "Моя корзина 🛒",
@@ -272,6 +303,9 @@ const ru: typeof en = {
     portion: "порция",
     placeOrder: "Сделать заказ",
     placingOrder: "Оформляем заказ...",
+    increase: "Увеличить количество",
+    decrease: "Уменьшить количество",
+    coinsEarned: "Ты заработаешь {count} 🪙 за этот заказ!",
   },
   orders: {
     title: "Мои заказы 🛒",
@@ -356,6 +390,10 @@ const ru: typeof en = {
       funFact: "Интересный факт",
       funFactPlaceholder: "Интересный факт, которым поделится маскот",
       unavailable: "Недоступно (нет в наличии) — дети не смогут заказать это блюдо",
+      coinValue: "Монетки за блюдо (1-3)",
+      coinValueHint: "Сколько монеток получает ребёнок за выбор этого полезного блюда.",
+      coinPrice: "Цена в монетках (1-20)",
+      coinPriceHint: "Сколько монеток стоит эта вкусняшка в магазине снеков.",
       delete: "Удалить блюдо",
       confirmDelete: 'Удалить «{name}» из меню?',
     },

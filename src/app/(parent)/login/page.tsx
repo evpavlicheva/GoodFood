@@ -20,7 +20,7 @@ export default function AdminLoginPage() {
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (login(pin)) {
-      router.push("/dashboard");
+      router.push("/menu-manager");
     } else {
       setError(true);
       setPin("");

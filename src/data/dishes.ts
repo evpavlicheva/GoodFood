@@ -4,7 +4,8 @@ export type DishCategory =
   | "Sides"
   | "Desserts"
   | "Drinks"
-  | "Fruits";
+  | "Fruits"
+  | "Snacks";
 
 /** Simulated AI (Claude Vision) photo analysis results */
 export interface DishAnalysis {
@@ -38,6 +39,16 @@ export interface Dish {
   mascotTipRu?: string;
   /** When false, the dish is shown greyed-out and can't be added to the cart. Defaults to true. */
   available?: boolean;
+  /**
+   * Coin value of this dish.
+   * - For healthy categories (everything except Snacks): how many coins the
+   *   child *earns* per portion when an order containing this dish is placed.
+   *   Sensible default is 1-3, set by `DEFAULT_COIN_VALUE` below; editable by
+   *   the parent in the dish form.
+   * - For the Snacks category: how many coins the dish *costs* to add to the
+   *   cart (1-20), set by the parent.
+   */
+  coinValue?: number;
 }
 
 export const CATEGORIES: DishCategory[] = [
@@ -47,6 +58,7 @@ export const CATEGORIES: DishCategory[] = [
   "Desserts",
   "Drinks",
   "Fruits",
+  "Snacks",
 ];
 
 export const CATEGORY_EMOJI: Record<"All" | DishCategory, string> = {
@@ -57,7 +69,29 @@ export const CATEGORY_EMOJI: Record<"All" | DishCategory, string> = {
   Desserts: "🍨",
   Drinks: "🥤",
   Fruits: "🍎",
+  Snacks: "🍬",
 };
+
+/** Sensible default coin value per category — used when a dish has no `coinValue` set. */
+export const DEFAULT_COIN_VALUE: Record<DishCategory, number> = {
+  Breakfast: 2,
+  Main: 3,
+  Sides: 2,
+  Desserts: 1,
+  Drinks: 1,
+  Fruits: 1,
+  Snacks: 5,
+};
+
+/** Whether this dish belongs to the "treats" category (costs coins instead of earning them). */
+export function isSnack(dish: Dish): boolean {
+  return dish.category === "Snacks";
+}
+
+/** Resolved coin value for a dish, falling back to the category default. */
+export function getCoinValue(dish: Dish): number {
+  return dish.coinValue ?? DEFAULT_COIN_VALUE[dish.category];
+}
 
 /** Localized dish name — falls back to the English name if no translation exists. */
 export function getDishName(dish: Dish, lang: "en" | "ru"): string {
@@ -103,6 +137,7 @@ export const DISHES: Dish[] = [
     mascotTip: "Chocolatey goodness to start your day with a smile! 🍫",
     mascotTipRu: "Шоколадная радость для улыбки с самого утра! 🍫",
     prepTime: 10,
+    coinValue: 1,
   },
   {
     id: "pancake-strawberry-jam",
@@ -234,5 +269,43 @@ export const DISHES: Dish[] = [
     mascotTip: "Sweet little bites of banana sunshine! 🍌",
     mascotTipRu: "Сладкие кусочки бананового солнышка! 🍌",
     prepTime: 2,
+  },
+
+  // Snacks — treats the child can buy with coins earned from healthy meals
+  {
+    id: "snack-chips",
+    name: "Crunchy Chips",
+    nameRu: "Хрустящие чипсы",
+    category: "Snacks",
+    image: "/dishes/snack-chips.jpg",
+    emoji: "🍟",
+    mascotTip: "A crunchy treat — earned with your coins! 🪙",
+    mascotTipRu: "Хрустящая вкусняшка — на заработанные монетки! 🪙",
+    prepTime: 1,
+    coinValue: 6,
+  },
+  {
+    id: "snack-cookie",
+    name: "Choco Chip Cookie",
+    nameRu: "Печенье с шоколадом",
+    category: "Snacks",
+    image: "/dishes/snack-cookie.jpg",
+    emoji: "🍪",
+    mascotTip: "Sweet, chewy, and worth every coin! 🪙",
+    mascotTipRu: "Сладкое, мягкое и стоит каждой монетки! 🪙",
+    prepTime: 1,
+    coinValue: 4,
+  },
+  {
+    id: "snack-candy",
+    name: "Fruity Candy",
+    nameRu: "Фруктовые конфеты",
+    category: "Snacks",
+    image: "/dishes/snack-candy.jpg",
+    emoji: "🍬",
+    mascotTip: "A tiny treat for your sweet tooth! 🪙",
+    mascotTipRu: "Маленькая радость для сладкоежки! 🪙",
+    prepTime: 1,
+    coinValue: 3,
   },
 ];

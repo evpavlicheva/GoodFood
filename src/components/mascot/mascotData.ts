@@ -16,6 +16,8 @@ export interface MascotConfig {
   bgClass: string;
   /** Color used for the chunky drop-shadow */
   shadowClass: string;
+  /** Coins needed to unlock this buddy. 0 = unlocked by default for everyone. */
+  cost: number;
 }
 
 export const MASCOTS: MascotConfig[] = [
@@ -26,6 +28,7 @@ export const MASCOTS: MascotConfig[] = [
     image: "/mascots/broccoli.png",
     bgClass: "bg-feather-100",
     shadowClass: "shadow-feather-600",
+    cost: 0,
   },
   {
     id: "carrot",
@@ -34,6 +37,7 @@ export const MASCOTS: MascotConfig[] = [
     image: "/mascots/carrot.png",
     bgClass: "bg-orange-100",
     shadowClass: "shadow-fox-600",
+    cost: 3,
   },
   {
     id: "apple",
@@ -42,6 +46,7 @@ export const MASCOTS: MascotConfig[] = [
     image: "/mascots/apple.png",
     bgClass: "bg-cardinal-50",
     shadowClass: "shadow-cardinal-600",
+    cost: 6,
   },
   {
     id: "banana",
@@ -50,6 +55,7 @@ export const MASCOTS: MascotConfig[] = [
     image: "/mascots/blueberry.png",
     bgClass: "bg-macaw-50",
     shadowClass: "shadow-macaw-600",
+    cost: 12,
   },
   {
     id: "strawberry",
@@ -58,12 +64,16 @@ export const MASCOTS: MascotConfig[] = [
     image: "/mascots/strawberry.png",
     bgClass: "bg-beetle-50",
     shadowClass: "shadow-beetle-600",
+    cost: 9,
   },
 ];
 
 export function getMascot(id: MascotId): MascotConfig {
   return MASCOTS.find((m) => m.id === id) ?? MASCOTS[0];
 }
+
+/** Default unlocked mascots for a brand-new profile. */
+export const DEFAULT_UNLOCKED_MASCOTS: MascotId[] = ["broccoli"];
 
 export type MascotEmotion =
   | "idle"

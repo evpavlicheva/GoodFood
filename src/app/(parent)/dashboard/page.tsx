@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useOrders, STATUS_META, type OrderStatus } from "@/context/OrdersContext";
+import { useOrders, STATUS_META, type Order, type OrderStatus } from "@/context/OrdersContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { pluralRu } from "@/lib/i18n/translations";
+import { adjustProfileCoins } from "@/lib/childProfile";
 
 const STATUS_FLOW: OrderStatus[] = ["preparing", "ready", "completed"];
 
@@ -24,6 +25,16 @@ export default function AdminDashboardPage() {
   function handleDelete(orderId: string) {
     if (!window.confirm(t("admin.dashboard.deleteConfirm"))) return;
     removeOrder(orderId);
+  }
+
+  function handleCancel(order: Order) {
+    if (order.status !== "cancelled") {
+      const refund = order.items
+        .filter((item) => item.isSnack)
+        .reduce((sum, item) => sum + item.coinValue * item.quantity, 0);
+      if (refund > 0) adjustProfileCoins(order.childName, refund);
+    }
+    updateOrderStatus(order.id, "cancelled");
   }
 
   const ordersWord =
@@ -101,7 +112,7 @@ export default function AdminDashboardPage() {
                   ))}
                   <button
                     type="button"
-                    onClick={() => updateOrderStatus(order.id, "cancelled")}
+                    onClick={() => handleCancel(order)}
                     className={`btn-press rounded-xl px-3 py-2 text-sm font-heading font-bold transition-colors ${
                       order.status === "cancelled"
                         ? "bg-cardinal text-white shadow-duo-sm shadow-cardinal-700"

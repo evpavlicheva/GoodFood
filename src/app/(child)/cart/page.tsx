@@ -16,9 +16,13 @@ import { generateMotivationalMessage } from "@/lib/motivation";
 export default function CartPage() {
   const router = useRouter();
   const { t, lang } = useLanguage();
-  const { items, removeItem, clearCart, totalCount } = useCart();
+  const { items, removeItem, updateQuantity, clearCart, totalCount } = useCart();
   const { addOrder } = useOrders();
-  const { profile } = useChildProfile();
+  const { profile, addCoins, spendCoins } = useChildProfile();
+
+  const coinsToEarn = items
+    .filter((item) => !item.isSnack)
+    .reduce((sum, item) => sum + item.coinValue * item.quantity, 0);
 
   const [motivation, setMotivation] = useState<string | null>(null);
   const [placing, setPlacing] = useState(false);
@@ -41,8 +45,24 @@ export default function CartPage() {
       motivation ?? generateMotivationalMessage(items, profile?.name, lang),
       profile?.name ?? "Friend"
     );
+    if (coinsToEarn > 0) addCoins(coinsToEarn);
     clearCart();
     router.push("/orders");
+  }
+
+  function handleIncrease(item: (typeof items)[number]) {
+    if (item.isSnack && !spendCoins(item.coinValue)) return;
+    updateQuantity(item.dishId, item.portion, item.quantity + 1);
+  }
+
+  function handleDecrease(item: (typeof items)[number]) {
+    if (item.isSnack) addCoins(item.coinValue);
+    updateQuantity(item.dishId, item.portion, item.quantity - 1);
+  }
+
+  function handleRemove(item: (typeof items)[number]) {
+    if (item.isSnack) addCoins(item.coinValue * item.quantity);
+    removeItem(item.dishId, item.portion);
   }
 
   if (totalCount === 0) {
@@ -77,12 +97,33 @@ export default function CartPage() {
               <div className="flex-1">
                 <p className="font-heading font-extrabold text-eel">{item.name}</p>
                 <p className="text-sm text-eel-light">
-                  {t(`menu.${item.portion}`)} {t("cart.portion")} · x{item.quantity}
+                  {t(`menu.${item.portion}`)} {t("cart.portion")}
                 </p>
+              </div>
+              <div className="flex items-center gap-1 rounded-full bg-cloud p-1">
+                <button
+                  type="button"
+                  aria-label={t("cart.decrease")}
+                  onClick={() => handleDecrease(item)}
+                  className="btn-press flex h-8 w-8 items-center justify-center rounded-full bg-white font-heading text-lg font-extrabold text-eel shadow-duo-sm shadow-wolf"
+                >
+                  −
+                </button>
+                <span className="w-6 text-center font-heading font-extrabold text-eel">
+                  {item.quantity}
+                </span>
+                <button
+                  type="button"
+                  aria-label={t("cart.increase")}
+                  onClick={() => handleIncrease(item)}
+                  className="btn-press flex h-8 w-8 items-center justify-center rounded-full bg-white font-heading text-lg font-extrabold text-eel shadow-duo-sm shadow-wolf"
+                >
+                  +
+                </button>
               </div>
               <button
                 type="button"
-                onClick={() => removeItem(item.dishId, item.portion)}
+                onClick={() => handleRemove(item)}
                 className="btn-press rounded-full bg-cloud px-3 py-2 text-sm font-extrabold text-cardinal shadow-duo-sm shadow-wolf"
               >
                 {t("cart.remove")}
@@ -100,6 +141,12 @@ export default function CartPage() {
           <span>{t("cart.totalItems")}</span>
           <span className="font-heading text-lg font-extrabold text-eel">{totalCount}</span>
         </div>
+
+        {coinsToEarn > 0 && (
+          <div className="mb-4 rounded-2xl bg-feather-50 px-4 py-2 text-center font-heading font-extrabold text-feather-700">
+            {t("cart.coinsEarned", { count: coinsToEarn })}
+          </div>
+        )}
 
         <div className="flex items-center gap-4 rounded-2xl bg-cloud p-4">
           <Mascot

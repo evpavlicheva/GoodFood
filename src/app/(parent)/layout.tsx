@@ -20,7 +20,7 @@ export default function ParentLayout({ children }: { children: React.ReactNode }
       router.replace("/login");
     }
     if (isAuthenticated && isLoginPage) {
-      router.replace("/dashboard");
+      router.replace("/menu-manager");
     }
   }, [isAuthenticated, isLoading, isLoginPage, router]);
 

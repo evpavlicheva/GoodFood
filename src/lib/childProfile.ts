@@ -1,13 +1,39 @@
-import type { MascotId } from "@/components/mascot/mascotData";
+import { DEFAULT_UNLOCKED_MASCOTS, type MascotId } from "@/components/mascot/mascotData";
 
 export interface ChildProfile {
   name: string;
   mascotId: MascotId;
+  /** Coins earned from healthy meals, spendable on snacks and mascot buddies. */
+  coins: number;
+  /** Mascot buddies this child has unlocked (broccoli is free for everyone). */
+  unlockedMascots: MascotId[];
 }
 
 const STORAGE_KEY = "goodfood:child-profile";
 const PROFILES_KEY = "goodfood:child-profiles";
 const ADD_NEW_FLAG_KEY = "goodfood:setup-add-new";
+
+/**
+ * Fills in defaults for fields added after a profile was first saved, so
+ * profiles created before the coins feature still load correctly.
+ */
+function normalizeProfile(p: {
+  name: string;
+  mascotId: MascotId;
+  coins?: number;
+  unlockedMascots?: MascotId[];
+}): ChildProfile {
+  const unlocked = new Set<MascotId>(p.unlockedMascots ?? DEFAULT_UNLOCKED_MASCOTS);
+  // Whichever buddy the child is currently playing as counts as unlocked.
+  unlocked.add(p.mascotId);
+  for (const id of DEFAULT_UNLOCKED_MASCOTS) unlocked.add(id);
+  return {
+    name: p.name,
+    mascotId: p.mascotId,
+    coins: typeof p.coins === "number" && p.coins >= 0 ? p.coins : 0,
+    unlockedMascots: Array.from(unlocked),
+  };
+}
 
 /**
  * Local-storage backed profile for the child user. This is a temporary
@@ -27,7 +53,7 @@ export function getChildProfile(): ChildProfile | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (typeof parsed?.name === "string" && typeof parsed?.mascotId === "string") {
-      return parsed as ChildProfile;
+      return normalizeProfile(parsed);
     }
     return null;
   } catch {
@@ -63,9 +89,9 @@ export function getSavedProfiles(): ChildProfile[] {
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter(
-      (p): p is ChildProfile => typeof p?.name === "string" && typeof p?.mascotId === "string"
-    );
+    return parsed
+      .filter((p): p is ChildProfile => typeof p?.name === "string" && typeof p?.mascotId === "string")
+      .map(normalizeProfile);
   } catch {
     return [];
   }
@@ -128,5 +154,44 @@ export function consumeNewProfileSetupFlag(): boolean {
     return !!flag;
   } catch {
     return false;
+  }
+}
+
+/**
+ * Adjusts a child's coin balance by `delta` (positive to award, negative to
+ * spend/refund-back), matched by name (case-insensitive). Updates both the
+ * saved-profiles list and the active profile (if it's the same child) so the
+ * change is reflected immediately if that profile is currently in use.
+ *
+ * Used e.g. when a parent cancels an order containing snacks — the coins
+ * spent on those snacks are refunded back to the child.
+ */
+export function adjustProfileCoins(name: string, delta: number): void {
+  if (typeof window === "undefined" || !delta) return;
+  const target = name.trim().toLowerCase();
+
+  const saved = getSavedProfiles();
+  let found = false;
+  const nextSaved = saved.map((p) => {
+    if (p.name.trim().toLowerCase() !== target) return p;
+    found = true;
+    return { ...p, coins: Math.max(0, p.coins + delta) };
+  });
+  if (found) {
+    try {
+      window.localStorage.setItem(PROFILES_KEY, JSON.stringify(nextSaved));
+    } catch {
+      // ignore storage errors
+    }
+  }
+
+  const active = getChildProfile();
+  if (active && active.name.trim().toLowerCase() === target) {
+    const updated = { ...active, coins: Math.max(0, active.coins + delta) };
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    } catch {
+      // ignore storage errors
+    }
   }
 }

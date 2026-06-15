@@ -121,8 +121,14 @@ export default function HomePage() {
 
       {/* Button layer */}
       <motion.div
-        animate={{ y: [0, -10, 0] }}
-        transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 2.4, ease: "easeInOut" }}
+        animate={{ scale: [1, 1.18, 0.95, 1.05, 0.99, 1] }}
+        transition={{
+          duration: 0.9,
+          times: [0, 0.25, 0.5, 0.7, 0.85, 1],
+          repeat: Infinity,
+          repeatDelay: 2.1,
+          ease: "easeInOut",
+        }}
       >
         <Link
           href="/setup"

@@ -8,6 +8,7 @@ import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import ProfileSwitcher from "@/components/layout/ProfileSwitcher";
 import { useCart } from "@/context/CartContext";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
+import { useChildProfile } from "@/hooks/useChildProfile";
 import { useLanguage } from "@/context/LanguageContext";
 
 /**
@@ -20,6 +21,7 @@ export default function ChildNav() {
   const { t } = useLanguage();
   const { totalCount } = useCart();
   const { isAuthenticated } = useAdminAuth();
+  const { profile } = useChildProfile();
 
   const NAV_LINKS = [
     { href: "/home", label: t("nav.home"), emoji: "🏠" },
@@ -90,6 +92,16 @@ export default function ChildNav() {
         </nav>
 
         <div className="flex shrink-0 items-center gap-2">
+          {profile && (
+            <span
+              role="status"
+              aria-label={t("coins.balanceLabel")}
+              className="flex shrink-0 items-center gap-1 rounded-full bg-bee-50 px-2.5 py-1.5 text-sm font-heading font-extrabold text-bee-700"
+            >
+              <span className="text-lg">🪙</span>
+              {profile.coins}
+            </span>
+          )}
           <LanguageSwitcher />
           <Link
             href={isAuthenticated ? "/dashboard" : "/login"}

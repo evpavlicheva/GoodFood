@@ -46,6 +46,7 @@ const en = {
     myOrders: "My Orders",
     history: "History",
     reports: "Reports",
+    myBuddy: "My Buddy",
     parentMode: "Parent Mode 🔐",
     backToHome: "← Back to Home",
     switchProfile: "Switch user",
@@ -62,10 +63,15 @@ const en = {
   },
   home: {
     greeting: "Hi {name}! Ready for a yummy day? 🥳",
-    myBuddies: "My Buddies",
+  },
+  buddies: {
+    title: "My Buddies",
+    active: "Active",
+    nowPlaying: "{name} is your buddy now! 🎉",
     unlockFor: "{count} 🪙 to unlock",
     unlocked: "🎉 {name} unlocked!",
     needMoreToUnlock: "Earn {count} more 🪙 to unlock {name}!",
+    tapToSelect: "Tap to make this your buddy",
   },
   menu: {
     title: "Yummy Menu",
@@ -247,6 +253,7 @@ const ru: typeof en = {
     myOrders: "Мои заказы",
     history: "История",
     reports: "Отчёты",
+    myBuddy: "Мой друг",
     parentMode: "Режим родителя 🔐",
     backToHome: "← На главную",
     switchProfile: "Сменить пользователя",
@@ -263,10 +270,15 @@ const ru: typeof en = {
   },
   home: {
     greeting: "Привет, {name}! Готов(а) к вкусному дню? 🥳",
-    myBuddies: "Мои друзья",
+  },
+  buddies: {
+    title: "Мои друзья",
+    active: "Активен",
+    nowPlaying: "{name} теперь твой друг! 🎉",
     unlockFor: "{count} 🪙 чтобы открыть",
     unlocked: "🎉 {name} открыт!",
     needMoreToUnlock: "Заработай ещё {count} 🪙, чтобы открыть {name}!",
+    tapToSelect: "Нажми, чтобы сделать его своим другом",
   },
   menu: {
     title: "Вкусное меню",

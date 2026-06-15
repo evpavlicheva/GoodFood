@@ -78,7 +78,7 @@ export default function DishCard({ dish }: DishCardProps) {
         )}
         <span
           className={`absolute left-3 top-3 rounded-full px-3 py-1 text-sm font-extrabold shadow-card ${
-            snack ? "bg-bee-50 text-bee-700" : "bg-feather-50 text-feather-700"
+            snack ? "bg-bee text-eel" : "bg-feather-50 text-feather-700"
           }`}
         >
           {snack ? t("menu.coinsCost", { count: coinValue }) : t("menu.earnCoins", { count: coinValue })}

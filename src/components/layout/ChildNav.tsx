@@ -96,7 +96,7 @@ export default function ChildNav() {
             <span
               role="status"
               aria-label={t("coins.balanceLabel")}
-              className="flex shrink-0 items-center gap-1 rounded-full bg-bee-50 px-2.5 py-1.5 text-sm font-heading font-extrabold text-bee-700"
+              className="flex shrink-0 items-center gap-1 rounded-full bg-bee px-2.5 py-1.5 text-sm font-heading font-extrabold text-eel shadow-card"
             >
               <span className="text-lg">🪙</span>
               {profile.coins}

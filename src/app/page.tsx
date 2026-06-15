@@ -5,18 +5,24 @@ import Link from "next/link";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import { useLanguage } from "@/context/LanguageContext";
 
+const STEPS = [
+  { key: "snap", emoji: "📸" },
+  { key: "choose", emoji: "🍽️" },
+  { key: "receive", emoji: "🎁" },
+] as const;
+
 /**
  * Splash / intro screen — the very first thing the app shows.
  *
- * Composed from separate layers (background wash, headline text,
- * character illustration crops, Play button) so it adapts cleanly across
- * phone, tablet and desktop instead of relying on one flat cropped photo.
+ * Composed from separate layers (background wash, headline text, Play
+ * button, character illustration crops, flow steps) so it adapts cleanly
+ * across phone, tablet and desktop instead of relying on one flat photo.
  */
 export default function HomePage() {
   const { t } = useLanguage();
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center gap-8 overflow-hidden bg-gradient-to-b from-[#DCE6C8] via-[#EEF3E3] to-[#FFFBF6] px-6 py-10 text-center">
+    <main className="relative flex min-h-screen flex-col items-center justify-center gap-6 overflow-hidden bg-gradient-to-b from-[#DCE6C8] via-[#EEF3E3] to-[#FFFBF6] px-6 py-10 text-center">
       <LanguageSwitcher className="absolute right-4 top-4 z-10" />
 
       {/* Text layer */}
@@ -29,8 +35,17 @@ export default function HomePage() {
         </p>
       </div>
 
-      {/* Illustration layer, with the Play button layered on top */}
-      <div className="relative flex w-full max-w-xl items-center justify-center gap-3 sm:gap-5">
+      {/* Button layer */}
+      <Link
+        href="/setup"
+        className="btn-press flex items-center gap-2 rounded-full border-2 border-[#8BA659] bg-[#FEF5EE]/90 px-8 py-3.5 font-heading text-lg font-extrabold uppercase tracking-wide text-[#5C7A36] shadow-card backdrop-blur-md transition-colors hover:bg-[#FEF5EE] sm:px-10 sm:py-4 sm:text-xl"
+      >
+        <span className="text-xl leading-none sm:text-2xl">▶</span>
+        {t("landing.play")}
+      </Link>
+
+      {/* Illustration layer */}
+      <div className="flex w-full max-w-xl items-center justify-center gap-3 sm:gap-5">
         <div className="relative aspect-square w-[44%] max-w-[260px] shrink-0 overflow-hidden rounded-3xl shadow-card sm:w-1/2">
           <Image
             src="/screen/splash-left.jpg"
@@ -58,15 +73,26 @@ export default function HomePage() {
             className="object-cover"
           />
         </div>
+      </div>
 
-        {/* Button layer */}
-        <Link
-          href="/setup"
-          className="btn-press absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-full border-2 border-[#8BA659] bg-[#FEF5EE]/90 px-8 py-3.5 font-heading text-lg font-extrabold uppercase tracking-wide text-[#5C7A36] shadow-card backdrop-blur-md transition-colors hover:bg-[#FEF5EE] sm:px-10 sm:py-4 sm:text-xl"
-        >
-          <span className="text-xl leading-none sm:text-2xl">▶</span>
-          {t("landing.play")}
-        </Link>
+      {/* Flow steps layer */}
+      <div className="flex w-full max-w-2xl flex-col gap-2 sm:flex-row sm:gap-3">
+        {STEPS.map((step) => (
+          <div
+            key={step.key}
+            className="flex flex-1 items-center gap-3 rounded-2xl border border-[#8BA659]/30 bg-[#FEF5EE]/80 px-4 py-2.5 text-left shadow-card backdrop-blur-sm"
+          >
+            <span className="text-2xl leading-none">{step.emoji}</span>
+            <span>
+              <span className="block font-heading text-sm font-extrabold text-[#5C7A36]">
+                {t(`landing.steps.${step.key}.title`)}
+              </span>
+              <span className="block text-xs font-bold text-[#4B5A2A]/80">
+                {t(`landing.steps.${step.key}.text`)}
+              </span>
+            </span>
+          </div>
+        ))}
       </div>
     </main>
   );

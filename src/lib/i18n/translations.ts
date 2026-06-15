@@ -20,6 +20,7 @@ const en = {
     subtitle: "Interactive Food Game for Picky Eaters",
     cta: "Let's go!",
     play: "Play",
+    step: "Step {n}",
     steps: {
       snap: { title: "Snap", text: "Take a photo of a dish" },
       choose: { title: "Choose", text: "Your child picks from the menu" },
@@ -196,6 +197,7 @@ const ru: typeof en = {
     subtitle: "Интерактивная игра про еду для маленьких приверед",
     cta: "Вперёд!",
     play: "Играть",
+    step: "Шаг {n}",
     steps: {
       snap: { title: "Сними", text: "Сфотографируй блюдо" },
       choose: { title: "Выбери", text: "Ребёнок выбирает из меню" },

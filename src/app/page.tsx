@@ -5,18 +5,70 @@ import Link from "next/link";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import { useLanguage } from "@/context/LanguageContext";
 
+const GREEN = "#8BA659";
+const CREAM = "#FEF5EE";
+
+/** Camera icon — step 1: snap a photo of a dish. */
+function SnapIcon() {
+  return (
+    <svg viewBox="0 0 48 48" className="h-7 w-7 shrink-0" aria-hidden="true">
+      <rect x="5" y="14" width="38" height="26" rx="7" fill={CREAM} stroke={GREEN} strokeWidth="3" />
+      <path d="M16 14l3-5h10l3 5" fill={CREAM} stroke={GREEN} strokeWidth="3" strokeLinejoin="round" />
+      <circle cx="24" cy="27" r="8" fill={CREAM} stroke={GREEN} strokeWidth="3" />
+      <circle cx="24" cy="27" r="3" fill={GREEN} />
+      <circle cx="36" cy="20" r="1.6" fill={GREEN} />
+    </svg>
+  );
+}
+
+/** Tablet + heart icon — step 2: child chooses from the menu. */
+function ChooseIcon() {
+  return (
+    <svg viewBox="0 0 48 48" className="h-7 w-7 shrink-0" aria-hidden="true">
+      <rect x="8" y="5" width="32" height="38" rx="6" fill={CREAM} stroke={GREEN} strokeWidth="3" />
+      <path d="M21 41h6" stroke={GREEN} strokeWidth="3" strokeLinecap="round" />
+      <path
+        d="M24 28c-5-4-8-7-8-11a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 4-3 7-8 11z"
+        fill={GREEN}
+        stroke={GREEN}
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/** Gift box icon — step 3: child receives their order. */
+function ReceiveIcon() {
+  return (
+    <svg viewBox="0 0 48 48" className="h-7 w-7 shrink-0" aria-hidden="true">
+      <rect x="7" y="20" width="34" height="20" rx="3" fill={CREAM} stroke={GREEN} strokeWidth="3" />
+      <rect x="5" y="13" width="38" height="9" rx="2.5" fill={CREAM} stroke={GREEN} strokeWidth="3" />
+      <path d="M24 13v27" stroke={GREEN} strokeWidth="3" />
+      <path
+        d="M24 13c-2-7-13-6-12 0c1 4 8 4 12 0zM24 13c2-7 13-6 12 0c-1 4-8 4-12 0z"
+        fill={CREAM}
+        stroke={GREEN}
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 const STEPS = [
-  { key: "snap", emoji: "📸" },
-  { key: "choose", emoji: "🍽️" },
-  { key: "receive", emoji: "🎁" },
+  { key: "snap", Icon: SnapIcon },
+  { key: "choose", Icon: ChooseIcon },
+  { key: "receive", Icon: ReceiveIcon },
 ] as const;
 
 /**
  * Splash / intro screen — the very first thing the app shows.
  *
  * Composed from separate layers (background wash, headline text, Play
- * button, character illustration crops, flow steps) so it adapts cleanly
- * across phone, tablet and desktop instead of relying on one flat photo.
+ * button, character illustration crops with a connecting arrow, and a
+ * "how it works" flow) so it adapts cleanly across phone, tablet and
+ * desktop instead of relying on one flat photo.
  */
 export default function HomePage() {
   const { t } = useLanguage();
@@ -44,8 +96,37 @@ export default function HomePage() {
         {t("landing.play")}
       </Link>
 
-      {/* Illustration layer */}
-      <div className="flex w-full max-w-xl items-center justify-center gap-3 sm:gap-5">
+      {/* Illustration layer, with a dashed "sending" arrow arcing from the
+          carrot mum to the kids */}
+      <div className="relative mt-4 flex w-full max-w-xl items-center justify-center gap-3 sm:gap-5">
+        <svg
+          viewBox="0 0 400 110"
+          preserveAspectRatio="none"
+          className="pointer-events-none absolute -top-14 left-0 z-10 h-16 w-full sm:-top-16 sm:h-20"
+          aria-hidden="true"
+        >
+          <defs>
+            <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="3" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#5C7A36" />
+            </marker>
+          </defs>
+          <path
+            d="M60,95 C 90,15 290,5 335,75"
+            fill="none"
+            stroke="#5C7A36"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeDasharray="2 12"
+            markerEnd="url(#arrowhead)"
+          />
+        </svg>
+        <span
+          className="absolute -top-20 left-[10%] z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 sm:-top-24 sm:h-10 sm:w-10"
+          style={{ borderColor: GREEN, backgroundColor: CREAM }}
+        >
+          <span className="text-base sm:text-lg">📸</span>
+        </span>
+
         <div className="relative aspect-square w-[44%] max-w-[260px] shrink-0 overflow-hidden rounded-3xl shadow-card sm:w-1/2">
           <Image
             src="/screen/splash-left.jpg"
@@ -77,20 +158,28 @@ export default function HomePage() {
 
       {/* Flow steps layer */}
       <div className="flex w-full max-w-2xl flex-col gap-2 sm:flex-row sm:gap-3">
-        {STEPS.map((step) => (
+        {STEPS.map((step, index) => (
           <div
             key={step.key}
-            className="flex flex-1 items-center gap-3 rounded-2xl border border-[#8BA659]/30 bg-[#FEF5EE]/80 px-4 py-2.5 text-left shadow-card backdrop-blur-sm"
+            className="flex flex-1 flex-col gap-1.5 rounded-2xl border border-[#8BA659]/30 bg-[#FEF5EE]/80 px-4 py-3 text-left shadow-card backdrop-blur-sm"
           >
-            <span className="text-2xl leading-none">{step.emoji}</span>
-            <span>
-              <span className="block font-heading text-sm font-extrabold text-[#5C7A36]">
-                {t(`landing.steps.${step.key}.title`)}
-              </span>
-              <span className="block text-xs font-bold text-[#4B5A2A]/80">
-                {t(`landing.steps.${step.key}.text`)}
-              </span>
+            <span
+              className="self-start rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white"
+              style={{ backgroundColor: GREEN }}
+            >
+              {t("landing.step", { n: index + 1 })}
             </span>
+            <div className="flex items-center gap-3">
+              <step.Icon />
+              <span>
+                <span className="block font-heading text-sm font-extrabold text-[#5C7A36]">
+                  {t(`landing.steps.${step.key}.title`)}
+                </span>
+                <span className="block text-xs font-bold text-[#4B5A2A]/80">
+                  {t(`landing.steps.${step.key}.text`)}
+                </span>
+              </span>
+            </div>
           </div>
         ))}
       </div>

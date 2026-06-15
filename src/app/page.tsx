@@ -16,11 +16,14 @@ export default function HomePage() {
   return (
     <main className="relative flex min-h-screen flex-col overflow-hidden">
       <Image
-        src="/screen/meeting-screen.png"
+        src="/screen/meeting-screen.jpg"
         alt=""
         fill
         priority
         sizes="100vw"
+        quality={75}
+        placeholder="blur"
+        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAcFBQYFBAcGBgYIBwcICxILCwoKCxYPEA0SGhYbGhkWGRgcICgiHB4mHhgZIzAkJiorLS4tGyIyNTEsNSgsLSz/2wBDAQcICAsJCxULCxUsHRkdLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCz/wAARCAAJABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAABgX/xAAjEAABBAEBCQAAAAAAAAAAAAACAAEDBAUyBhMUITEzQXGB/8QAFQEBAQAAAAAAAAAAAAAAAAAABAX/xAAYEQADAQEAAAAAAAAAAAAAAAAAARICEf/aAAwDAQACEQMRAD8Ao3btnOYQYrsnCSC3Jn8oFm6EdKId7KMpE+sn6Mmma77+0E200D8Uvry0Pmj/2Q=="
         className="object-cover"
       />
       <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/10 to-black/50" />

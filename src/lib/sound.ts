@@ -48,14 +48,28 @@ function scheduleNote(ctx: AudioContext, note: Note, baseTime: number) {
 }
 
 /**
- * "Yummy Time!" jingle — bright ascending fanfare + chord hit + bounce,
+ * "Yummy Time!" jingle — bright ascending fanfare + chord hit + sparkle,
  * followed by a synthesised voice saying "Yummy Time!".
  */
 export function playYummyJingle(): number {
   const ctx = getAudioContext();
   if (!ctx) return 0;
 
+  // Force-resume the context (mobile browsers suspend it aggressively).
+  ctx.resume().catch(() => {});
+
   const now = ctx.currentTime;
+  const TOTAL = 1.15;
+
+  // — Silent keepalive oscillator: prevents iOS from suspending the context
+  //   mid-jingle when the tab briefly goes to the background on push arrival.
+  const keepalive = ctx.createOscillator();
+  const keepGain = ctx.createGain();
+  keepGain.gain.value = 0; // completely silent
+  keepalive.connect(keepGain);
+  keepGain.connect(ctx.destination);
+  keepalive.start(now);
+  keepalive.stop(now + TOTAL + 0.1);
 
   // — Kick drum (pitch-swept sine) —
   const kick = ctx.createOscillator();
@@ -78,19 +92,19 @@ export function playYummyJingle(): number {
     { freq: 783.99, start: 0.14, duration: 0.07 },
     { freq: 1046.5, start: 0.21, duration: 0.07 },
 
-    // Big chord hit — C major in three octaves
-    { freq: 1318.5, start: 0.28, duration: 0.22, gain: 0.32 },  // E6
-    { freq: 1046.5, start: 0.28, duration: 0.22, gain: 0.22 },  // C6
+    // Big chord hit — C major
+    { freq: 1318.5, start: 0.28, duration: 0.22, gain: 0.32 },         // E6
+    { freq: 1046.5, start: 0.28, duration: 0.22, gain: 0.22 },         // C6
     { freq: 659.25, start: 0.28, duration: 0.22, gain: 0.18, type: "sine" }, // E5
 
-    // Sparkle bounce
-    { freq: 1568.0, start: 0.52, duration: 0.09, gain: 0.22 },  // G6
-    { freq: 1760.0, start: 0.61, duration: 0.09, gain: 0.22 },  // A6
-    { freq: 2093.0, start: 0.70, duration: 0.09, gain: 0.20 },  // C7
+    // Sparkle
+    { freq: 1568.0, start: 0.52, duration: 0.09, gain: 0.22 },         // G6
+    { freq: 1760.0, start: 0.61, duration: 0.09, gain: 0.22 },         // A6
+    { freq: 2093.0, start: 0.70, duration: 0.09, gain: 0.20 },         // C7
 
     // Resolve
-    { freq: 1046.5, start: 0.82, duration: 0.28, gain: 0.30 },  // C6
-    { freq: 1318.5, start: 0.82, duration: 0.28, gain: 0.18, type: "sine" }, // E6 harmony
+    { freq: 1046.5, start: 0.82, duration: 0.30, gain: 0.30 },         // C6
+    { freq: 1318.5, start: 0.82, duration: 0.30, gain: 0.18, type: "sine" }, // E6
   ];
 
   for (const note of notes) {
@@ -105,14 +119,13 @@ export function playYummyJingle(): number {
       utt.rate = 1.05;
       utt.pitch = 1.6;
       utt.volume = 1;
-      window.speechSynthesis.cancel(); // clear any queued speech
+      window.speechSynthesis.cancel();
       window.speechSynthesis.speak(utt);
     };
-    // Let the musical fanfare start first, then the voice kicks in
     setTimeout(say, 320);
   }
 
-  return 1.1; // total musical duration in seconds
+  return TOTAL;
 }
 
 /**

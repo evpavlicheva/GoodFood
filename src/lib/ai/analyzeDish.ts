@@ -10,6 +10,8 @@ export interface DishPhotoAnalysis extends DishAnalysis {
   mascotTip: string;
   /** Suggested mascot description in Russian */
   mascotTipRu: string;
+  /** Main ingredients detected in the photo */
+  ingredients: string[];
 }
 
 /**
@@ -44,6 +46,7 @@ export async function analyzeDishPhoto(
         fat: Number(data.fat) || 0,
         carbs: Number(data.carbs) || 0,
         funFact: typeof data.funFact === "string" ? data.funFact : "",
+        ingredients: Array.isArray(data.ingredients) ? data.ingredients : [],
       };
     }
 
@@ -83,5 +86,6 @@ function simulateAnalysis(dishName?: string): DishPhotoAnalysis {
     fat,
     carbs,
     funFact: funFacts[Math.floor(Math.random() * funFacts.length)],
+    ingredients: [],
   };
 }

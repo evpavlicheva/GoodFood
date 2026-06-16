@@ -49,6 +49,8 @@ export interface Dish {
    *   cart (1-20), set by the parent.
    */
   coinValue?: number;
+  /** List of ingredients (populated by AI photo analysis, editable by parent). */
+  ingredients?: string[];
 }
 
 export const CATEGORIES: DishCategory[] = [

@@ -15,6 +15,7 @@ interface AnalyzeDishResult {
   fat: number;
   carbs: number;
   funFact: string;
+  ingredients: string[];
 }
 
 const PROMPT = `You are a friendly nutrition assistant for "GoodFood", a Duolingo-style meal app for kids (roughly ages 6-15) and their parents.
@@ -30,9 +31,11 @@ Look at the attached photo of a dish and respond with ONLY a single JSON object 
   "protein": <number, grams>,
   "fat": <number, grams>,
   "carbs": <number, grams>,
-  "funFact": "One short, fun, kid-friendly nutrition fact related to this dish, in English, with an emoji"
+  "funFact": "One short, fun, kid-friendly nutrition fact related to this dish, in English, with an emoji",
+  "ingredients": ["ingredient1", "ingredient2", "..."]
 }
 
+For "ingredients": list the main ingredients visible or implied by the dish (e.g. ["potato", "chicken", "cheese", "tomato"]). Use simple, lowercase singular nouns in English (3-10 ingredients). Be realistic based on what's visible in the photo.
 Be realistic but approachable with the nutrition estimates - they're for a child's portion. Keep all text playful and age-appropriate. Respond with raw JSON only.`;
 
 export async function POST(request: NextRequest) {
@@ -115,6 +118,7 @@ export async function POST(request: NextRequest) {
 
     const parsed = JSON.parse(jsonMatch[0]) as Partial<AnalyzeDishResult>;
 
+    const rawIngredients = Array.isArray(parsed.ingredients) ? parsed.ingredients : [];
     const result: AnalyzeDishResult = {
       name: String(parsed.name ?? "").trim(),
       nameRu: String(parsed.nameRu ?? "").trim(),
@@ -125,6 +129,7 @@ export async function POST(request: NextRequest) {
       fat: Math.round(Number(parsed.fat) || 0),
       carbs: Math.round(Number(parsed.carbs) || 0),
       funFact: String(parsed.funFact ?? "").trim(),
+      ingredients: rawIngredients.map((i) => String(i).trim().toLowerCase()).filter(Boolean),
     };
 
     return NextResponse.json(result);

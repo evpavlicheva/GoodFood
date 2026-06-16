@@ -35,6 +35,8 @@ export default function DishForm({ initial, submitLabel, onSubmit, onDelete }: D
   const [image, setImage] = useState(initial?.image ?? "");
   const [available, setAvailable] = useState(initial?.available ?? true);
   const [analysis, setAnalysis] = useState<DishAnalysis | undefined>(initial?.analysis);
+  const [ingredients, setIngredients] = useState<string[]>(initial?.ingredients ?? []);
+  const [ingredientInput, setIngredientInput] = useState("");
   const [analyzing, setAnalyzing] = useState(false);
 
   async function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -72,6 +74,16 @@ export default function DishForm({ initial, submitLabel, onSubmit, onDelete }: D
       if (!nameRu.trim() && result.nameRu) setNameRu(result.nameRu);
       if (!mascotTip.trim() && result.mascotTip) setMascotTip(result.mascotTip);
       if (!mascotTipRu.trim() && result.mascotTipRu) setMascotTipRu(result.mascotTipRu);
+      // Auto-fill ingredients from AI (merge with any already entered manually)
+      if (result.ingredients.length > 0) {
+        setIngredients((prev) => {
+          const merged = [...prev];
+          for (const ing of result.ingredients) {
+            if (!merged.includes(ing)) merged.push(ing);
+          }
+          return merged;
+        });
+      }
 
       setAnalyzing(false);
     };
@@ -88,8 +100,33 @@ export default function DishForm({ initial, submitLabel, onSubmit, onDelete }: D
     });
   }
 
+  function addIngredient(value: string) {
+    const tag = value.trim().toLowerCase();
+    if (tag && !ingredients.includes(tag)) {
+      setIngredients((prev) => [...prev, tag]);
+    }
+    setIngredientInput("");
+  }
+
+  function removeIngredient(tag: string) {
+    setIngredients((prev) => prev.filter((i) => i !== tag));
+  }
+
+  function handleIngredientKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      addIngredient(ingredientInput);
+    } else if (e.key === "Backspace" && !ingredientInput && ingredients.length > 0) {
+      setIngredients((prev) => prev.slice(0, -1));
+    }
+  }
+
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    // Commit any partially-typed ingredient before saving
+    const finalIngredients = [...ingredients];
+    const pending = ingredientInput.trim().toLowerCase();
+    if (pending && !finalIngredients.includes(pending)) finalIngredients.push(pending);
     onSubmit({
       name,
       nameRu: nameRu.trim() || undefined,
@@ -102,6 +139,7 @@ export default function DishForm({ initial, submitLabel, onSubmit, onDelete }: D
       image,
       analysis,
       available,
+      ingredients: finalIngredients,
     });
   }
 
@@ -324,6 +362,43 @@ export default function DishForm({ initial, submitLabel, onSubmit, onDelete }: D
             className="w-full rounded-xl border-2 border-snow bg-snow px-2 py-2 text-eel outline-none focus:border-feather"
           />
         </div>
+      </div>
+
+      {/* Ingredients */}
+      <div className="rounded-2xl bg-cloud p-4">
+        <p className="mb-3 font-heading text-sm font-extrabold text-eel">
+          {t("admin.dishForm.ingredientsTitle")} <span className="font-normal text-eel-light">{t("admin.dishForm.ingredientsHint")}</span>
+        </p>
+        <div className="flex flex-wrap gap-2 mb-3">
+          {ingredients.map((ing) => (
+            <span
+              key={ing}
+              className="inline-flex items-center gap-1 rounded-full bg-feather/20 px-3 py-1 text-sm font-bold text-feather"
+            >
+              {ing}
+              <button
+                type="button"
+                onClick={() => removeIngredient(ing)}
+                className="ml-1 text-feather/60 hover:text-cardinal leading-none"
+                aria-label={`Remove ${ing}`}
+              >
+                ×
+              </button>
+            </span>
+          ))}
+        </div>
+        <input
+          type="text"
+          value={ingredientInput}
+          onChange={(e) => setIngredientInput(e.target.value)}
+          onKeyDown={handleIngredientKeyDown}
+          onBlur={() => addIngredient(ingredientInput)}
+          placeholder={t("admin.dishForm.ingredientsPlaceholder")}
+          className="w-full rounded-xl border-2 border-snow bg-snow px-3 py-2 text-eel outline-none focus:border-feather"
+        />
+        {analyzing && (
+          <p className="mt-1 text-xs text-macaw font-bold">{t("admin.dishForm.ingredientsAutoFilling")}</p>
+        )}
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3">

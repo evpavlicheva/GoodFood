@@ -26,8 +26,12 @@ export default function ReminderOverlay() {
     function handleMessage(event: MessageEvent) {
       const data = event.data;
       if (data?.type === "goodfood-push" && data.payload?.kind === "reminder") {
-        playYummyJingle();
         setVisible(true);
+        // Try playing immediately — works when the page was opened by tapping
+        // the OS notification (that tap counts as a user gesture).
+        // If blocked (tab was already open in background), the sound will
+        // play on the child's first tap of the overlay instead.
+        playYummyJingle();
       }
     }
 
@@ -47,7 +51,8 @@ export default function ReminderOverlay() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-6 bg-eel/80 px-6 text-center backdrop-blur-sm"
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-6 bg-eel/80 px-6 text-center backdrop-blur-sm cursor-pointer"
+          onClick={playYummyJingle}
         >
           <motion.div
             initial={{ scale: 0.7, y: 20 }}

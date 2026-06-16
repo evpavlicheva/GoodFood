@@ -6,7 +6,7 @@ export default function GoldCoin({ size = 20 }: { size?: number }) {
       aria-hidden="true"
       style={{ display: "inline-flex", flexShrink: 0, width: size, height: size }}
     >
-      <Image src="/icons/coin.png" alt="" width={size} height={size} style={{ objectFit: "contain" }} />
+      <Image src="/icons/coin1.png" alt="" width={size} height={size} style={{ objectFit: "contain" }} />
     </span>
   );
 }

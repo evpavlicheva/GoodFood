@@ -103,7 +103,7 @@ export default function ChildNav() {
               aria-label={t("coins.balanceLabel")}
               className="flex shrink-0 items-center gap-1 rounded-full bg-cloud px-2 py-1 text-sm font-heading font-extrabold text-eel shadow-card sm:px-2.5 sm:py-1.5"
             >
-              <GoldCoin size={18} />
+              <GoldCoin size={21} />
               {profile.coins}
             </span>
           )}

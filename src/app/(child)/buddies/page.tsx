@@ -71,7 +71,7 @@ export default function BuddiesPage() {
         aria-label={t("coins.balanceLabel")}
         className="flex items-center gap-2 rounded-full bg-cloud px-5 py-2 font-heading text-lg font-extrabold text-eel shadow-card"
       >
-        <GoldCoin size={24} />
+        <GoldCoin size={28} />
         <span>{profile.coins}</span>
       </div>
 

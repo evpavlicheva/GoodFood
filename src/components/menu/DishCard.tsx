@@ -82,7 +82,7 @@ export default function DishCard({ dish }: DishCardProps) {
             snack ? "bg-bee text-eel" : "bg-feather-50 text-feather-700"
           }`}
         >
-          <GoldCoin size={14} />
+          <GoldCoin size={16} />
           {snack ? t("menu.coinsCost", { count: coinValue }) : t("menu.earnCoins", { count: coinValue })}
         </span>
         <span className="absolute right-3 top-3 rounded-full bg-white px-3 py-1 text-sm font-extrabold text-eel shadow-card">

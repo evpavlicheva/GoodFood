@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function GoldCoin({ size = 20 }: { size?: number }) {
+export default function GoldCoin({ size = 23 }: { size?: number }) {
   return (
     <span
       aria-hidden="true"

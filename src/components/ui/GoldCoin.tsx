@@ -1,55 +1,28 @@
-"use client";
-
-import { useId } from "react";
-
 /**
- * Gold coin with a broccoli silhouette stamped on it.
- * Uses useId() so each instance has a unique gradient ID — no conflicts
- * when multiple coins are rendered on the same page.
+ * Gold coin — pure CSS, no SVG gradient IDs, works on SSR + all browsers.
+ * Shows a golden circle with a small broccoli emoji stamped on it.
  */
 export default function GoldCoin({ size = 20 }: { size?: number }) {
-  const id = useId().replace(/:/g, "_");
-  const gradId = `coin_${id}`;
-  const rimId = `rim_${id}`;
-
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 32 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+    <span
       aria-hidden="true"
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0,
+        width: size,
+        height: size,
+        borderRadius: "50%",
+        background:
+          "radial-gradient(circle at 35% 30%, #FFF3A3 0%, #FFD000 50%, #B87000 100%)",
+        boxShadow:
+          "inset 0 -2px 3px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.18)",
+        fontSize: Math.round(size * 0.58),
+        lineHeight: 1,
+      }}
     >
-      <defs>
-        <radialGradient id={gradId} cx="38%" cy="30%" r="65%">
-          <stop offset="0%" stopColor="#FFF0A0" />
-          <stop offset="45%" stopColor="#FFD000" />
-          <stop offset="100%" stopColor="#C87000" />
-        </radialGradient>
-        <radialGradient id={rimId} cx="50%" cy="50%" r="50%">
-          <stop offset="80%" stopColor="transparent" />
-          <stop offset="100%" stopColor="#A85800" stopOpacity="0.4" />
-        </radialGradient>
-      </defs>
-
-      {/* Coin body */}
-      <circle cx="16" cy="16" r="15" fill={`url(#${gradId})`} />
-      {/* Rim shadow */}
-      <circle cx="16" cy="16" r="15" fill={`url(#${rimId})`} />
-      {/* Inner ring */}
-      <circle cx="16" cy="16" r="11.5" fill="none" stroke="#A85800" strokeWidth="0.8" strokeOpacity="0.4" />
-
-      {/* Broccoli silhouette — golden amber on gold coin */}
-      {/* Stem */}
-      <rect x="14.5" y="20" width="3" height="5" rx="1.5" fill="#8B5000" opacity="0.75" />
-      {/* Main head puffs */}
-      <circle cx="16" cy="17" r="4.5" fill="#8B5000" opacity="0.75" />
-      <circle cx="12.5" cy="19" r="3" fill="#8B5000" opacity="0.70" />
-      <circle cx="19.5" cy="19" r="3" fill="#8B5000" opacity="0.70" />
-      <circle cx="16" cy="14.5" r="3.5" fill="#A86000" opacity="0.75" />
-      <circle cx="13" cy="16" r="2.5" fill="#A86000" opacity="0.65" />
-      <circle cx="19" cy="16" r="2.5" fill="#A86000" opacity="0.65" />
-    </svg>
+      🥦
+    </span>
   );
 }

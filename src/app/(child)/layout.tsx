@@ -7,6 +7,7 @@ import ChildNav from "@/components/layout/ChildNav";
 import ReminderOverlay from "@/components/notifications/ReminderOverlay";
 import NotificationsPrompt from "@/components/notifications/NotificationsPrompt";
 import { useChildProfile } from "@/hooks/useChildProfile";
+import { useSpeechSynthesisPrimer } from "@/hooks/useSpeechSynthesisPrimer";
 import { useLanguage } from "@/context/LanguageContext";
 
 /**
@@ -28,6 +29,7 @@ export default function ChildLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
   const { t } = useLanguage();
   const { profile, isLoading } = useChildProfile();
+  useSpeechSynthesisPrimer();
   const showChrome = pathname !== "/setup" && !!profile;
   // /home already shows its own large mascot, so skip the floating corner one there.
   const showFloatingMascot = showChrome && pathname !== "/home";

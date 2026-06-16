@@ -30,9 +30,10 @@ export default function AdminNav() {
       <div className="mx-auto flex max-w-5xl items-center gap-2 px-4 py-3">
         <div className="flex shrink-0 items-center gap-2">
           <span className="text-2xl">🥦</span>
-          <span className="font-heading text-base font-extrabold text-eel">
-            {t("admin.nav.brand")} <span className="text-feather">{t("admin.nav.brandSuffix")}</span>
-          </span>
+          <div className="flex flex-col leading-tight">
+            <span className="font-heading text-base font-extrabold text-eel">{t("admin.nav.brand")}</span>
+            <span className="font-heading text-xs font-extrabold text-feather">{t("admin.nav.brandSuffix")}</span>
+          </div>
         </div>
 
         <nav className="flex flex-1 items-center gap-1">

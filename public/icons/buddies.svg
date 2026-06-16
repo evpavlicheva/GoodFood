@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- Body / stem -->
+  <rect x="50" y="72" width="20" height="28" rx="8" fill="#5BBD4E"/>
+  <!-- Arms -->
+  <ellipse cx="34" cy="70" rx="10" ry="6" rx2="6" fill="#5BBD4E" transform="rotate(-20 34 70)"/>
+  <ellipse cx="86" cy="70" rx="10" ry="6" fill="#5BBD4E" transform="rotate(20 86 70)"/>
+  <!-- Broccoli head - big green pom-poms -->
+  <circle cx="60" cy="46" r="26" fill="#3DA832"/>
+  <circle cx="42" cy="52" r="18" fill="#4CBF3A"/>
+  <circle cx="78" cy="52" r="18" fill="#4CBF3A"/>
+  <circle cx="60" cy="36" r="20" fill="#58CC02"/>
+  <circle cx="44" cy="44" r="14" fill="#6BDA1A"/>
+  <circle cx="76" cy="44" r="14" fill="#6BDA1A"/>
+  <circle cx="60" cy="30" r="16" fill="#76E020"/>
+  <!-- Face -->
+  <!-- Eyes -->
+  <ellipse cx="53" cy="52" rx="4" ry="4.5" fill="white"/>
+  <ellipse cx="67" cy="52" rx="4" ry="4.5" fill="white"/>
+  <circle cx="54" cy="53" r="2.5" fill="#2D2D2D"/>
+  <circle cx="68" cy="53" r="2.5" fill="#2D2D2D"/>
+  <!-- Eye shine -->
+  <circle cx="55" cy="51.5" r="1" fill="white"/>
+  <circle cx="69" cy="51.5" r="1" fill="white"/>
+  <!-- Smile -->
+  <path d="M52 60 Q60 67 68 60" stroke="#2D2D2D" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <!-- Cheeks -->
+  <ellipse cx="46" cy="60" rx="5" ry="3.5" fill="#FF9EAA" opacity="0.6"/>
+  <ellipse cx="74" cy="60" rx="5" ry="3.5" fill="#FF9EAA" opacity="0.6"/>
+  <!-- Feet -->
+  <ellipse cx="50" cy="101" rx="7" ry="5" fill="#3DA832"/>
+  <ellipse cx="70" cy="101" rx="7" ry="5" fill="#3DA832"/>
+</svg>

@@ -142,14 +142,14 @@ export default function IngredientsPage() {
 
                 <button
                   onClick={() => toggleIngredient(ing.name, ing.available)}
-                  className={`relative h-7 w-12 rounded-full transition-colors duration-200 focus:outline-none ${
+                  className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full transition-colors duration-200 focus:outline-none ${
                     ing.available ? "bg-feather" : "bg-eel-light/30"
                   }`}
                   aria-label={`${ing.available ? "Disable" : "Enable"} ${ing.name}`}
                 >
                   <span
-                    className={`absolute top-0.5 h-6 w-6 rounded-full bg-white shadow transition-transform duration-200 ${
-                      ing.available ? "translate-x-5" : "translate-x-0.5"
+                    className={`absolute left-0.5 top-0.5 h-6 w-6 rounded-full bg-white shadow-md transition-transform duration-200 ${
+                      ing.available ? "translate-x-5" : "translate-x-0"
                     }`}
                   />
                 </button>

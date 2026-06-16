@@ -8,6 +8,7 @@ import Mascot from "@/components/mascot/Mascot";
 import { MASCOTS } from "@/components/mascot/mascotData";
 import { useChildProfile } from "@/hooks/useChildProfile";
 import { useLanguage } from "@/context/LanguageContext";
+import GoldCoin from "@/components/ui/GoldCoin";
 
 export default function BuddiesPage() {
   const router = useRouter();
@@ -68,9 +69,9 @@ export default function BuddiesPage() {
       <div
         role="status"
         aria-label={t("coins.balanceLabel")}
-        className="flex items-center gap-2 rounded-full bg-bee px-5 py-2 font-heading text-lg font-extrabold text-eel shadow-card"
+        className="flex items-center gap-2 rounded-full bg-cloud px-5 py-2 font-heading text-lg font-extrabold text-eel shadow-card"
       >
-        <span className="text-2xl">🪙</span>
+        <GoldCoin size={24} />
         <span>{profile.coins}</span>
       </div>
 

@@ -30,7 +30,7 @@ export default function ChildHomePage() {
     { href: "/menu", emoji: "🍽️", icon: "/icons/menu.png", label: t("nav.menu"), colorClass: "bg-feather-50 text-feather-700" },
     { href: "/orders", emoji: "🛒", icon: "/icons/orders.png", label: t("nav.myOrders"), colorClass: "bg-macaw-50 text-macaw-700" },
     { href: "/history", emoji: "📜", icon: "/icons/history.png", label: t("nav.history"), colorClass: "bg-bee-50 text-bee-700" },
-    { href: "/buddies", emoji: "🦊", label: t("nav.myBuddy"), colorClass: "bg-beetle-50 text-beetle-700" },
+    { href: "/buddies", emoji: "🥦", icon: "/icons/buddies.svg", label: t("nav.myBuddy"), colorClass: "bg-beetle-50 text-beetle-700" },
   ];
 
   return (

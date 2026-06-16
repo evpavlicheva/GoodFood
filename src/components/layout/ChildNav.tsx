@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import ProfileSwitcher from "@/components/layout/ProfileSwitcher";
+import GoldCoin from "@/components/ui/GoldCoin";
 import { useCart } from "@/context/CartContext";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useChildProfile } from "@/hooks/useChildProfile";
@@ -35,42 +36,45 @@ export default function ChildNav() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-cloud bg-white/90 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl items-center gap-1 overflow-x-auto px-3 py-2 sm:gap-2 sm:px-6">
+      <div className="mx-auto flex max-w-5xl items-center gap-1 px-2 py-2 sm:px-4">
+        {/* Logo — just emoji on xs, "Good\nFood" on sm, one-line on lg */}
         <Link href="/" className="mr-1 flex shrink-0 items-center gap-1.5">
-          <span className="text-4xl">🥦</span>
-          <span className="hidden font-heading text-lg font-extrabold text-eel sm:inline">
-            GoodFood
+          <span className="text-3xl sm:text-4xl">🥦</span>
+          <span className="hidden font-heading text-sm font-extrabold leading-tight text-eel sm:inline lg:text-lg lg:leading-none">
+            <span className="lg:hidden">Good<br/>Food</span>
+            <span className="hidden lg:inline">GoodFood</span>
           </span>
         </Link>
 
-        <nav className="flex flex-1 items-center gap-1 sm:gap-2">
+        {/* Nav links — icons only below lg, icon+text on lg+ */}
+        <nav className="flex flex-1 items-center gap-0.5 sm:gap-1">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`shrink-0 rounded-xl px-2.5 py-2 text-sm font-heading font-bold transition-colors sm:px-3 ${
+              className={`shrink-0 rounded-xl px-2 py-2 text-sm font-heading font-bold transition-colors sm:px-2.5 lg:px-3 ${
                 isActive(link.href) ? "bg-feather-50 text-feather" : "text-eel-light hover:text-eel"
               }`}
             >
               {link.icon ? (
-                <span className="relative inline-block h-[30px] w-[30px] align-middle sm:mr-1">
-                  <Image src={link.icon} alt="" fill sizes="30px" className="object-contain" />
+                <span className="relative inline-block h-[28px] w-[28px] align-middle lg:mr-1">
+                  <Image src={link.icon} alt="" fill sizes="28px" className="object-contain" />
                 </span>
               ) : (
-                <span className="text-2xl sm:mr-1">{link.emoji}</span>
+                <span className="text-2xl lg:mr-1">{link.emoji}</span>
               )}
-              <span className="hidden sm:inline">{link.label}</span>
+              <span className="hidden lg:inline">{link.label}</span>
             </Link>
           ))}
 
-          {/* Cart gets its own slot with a live item-count badge on its icon */}
+          {/* Cart with live badge */}
           <Link
             href="/cart"
-            className={`mr-2 flex shrink-0 items-center rounded-xl px-2.5 py-2 text-sm font-heading font-bold transition-colors sm:mr-4 sm:px-3 ${
+            className={`mr-1 flex shrink-0 items-center rounded-xl px-2 py-2 text-sm font-heading font-bold transition-colors sm:mr-2 sm:px-2.5 lg:px-3 ${
               isActive("/cart") ? "bg-feather-50 text-feather" : "text-eel-light hover:text-eel"
             }`}
           >
-            <span className="relative inline-flex text-2xl sm:mr-1">
+            <span className="relative inline-flex text-2xl lg:mr-1">
               🛒
               <AnimatePresence>
                 {totalCount > 0 && (
@@ -87,28 +91,29 @@ export default function ChildNav() {
                 )}
               </AnimatePresence>
             </span>
-            <span className="hidden sm:inline">{t("nav.cart")}</span>
+            <span className="hidden lg:inline">{t("nav.cart")}</span>
           </Link>
         </nav>
 
-        <div className="flex shrink-0 items-center gap-2">
+        {/* Right side — coin balance + lang + parent mode + profile */}
+        <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">
           {profile && (
             <span
               role="status"
               aria-label={t("coins.balanceLabel")}
-              className="flex shrink-0 items-center gap-1 rounded-full bg-bee px-2.5 py-1.5 text-sm font-heading font-extrabold text-eel shadow-card"
+              className="flex shrink-0 items-center gap-1 rounded-full bg-cloud px-2 py-1 text-sm font-heading font-extrabold text-eel shadow-card sm:px-2.5 sm:py-1.5"
             >
-              <span className="text-lg">🪙</span>
+              <GoldCoin size={18} />
               {profile.coins}
             </span>
           )}
           <LanguageSwitcher />
           <Link
             href={isAuthenticated ? "/dashboard" : "/login"}
-            className="rounded-xl px-2.5 py-2 text-sm font-heading font-bold text-macaw hover:underline sm:px-3"
+            className="rounded-xl px-2 py-2 text-sm font-heading font-bold text-macaw hover:underline sm:px-2.5 lg:px-3"
           >
-            <span className="sm:hidden">🔐</span>
-            <span className="hidden sm:inline">{t("nav.parentMode")}</span>
+            <span className="lg:hidden">🔐</span>
+            <span className="hidden lg:inline">{t("nav.parentMode")}</span>
           </Link>
           <ProfileSwitcher />
         </div>

@@ -27,22 +27,22 @@ export default function AdminNav() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-cloud bg-white/90 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-4">
-        <div className="flex items-center gap-2">
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3">
+        <div className="flex shrink-0 items-center gap-2">
           <span className="text-2xl">🥦</span>
-          <span className="font-heading text-lg font-extrabold text-eel">
+          <span className="font-heading text-base font-extrabold text-eel lg:text-lg">
             {t("admin.nav.brand")} <span className="text-feather">{t("admin.nav.brandSuffix")}</span>
           </span>
         </div>
 
-        <nav className="flex items-center gap-2">
+        <nav className="flex flex-1 flex-wrap items-center gap-1">
           {NAV_LINKS.map((link) => {
             const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`rounded-xl px-3 py-2 text-sm font-heading font-bold transition-colors ${
+                className={`rounded-xl px-2.5 py-1.5 text-sm font-heading font-bold transition-colors lg:px-3 lg:py-2 ${
                   active ? "bg-feather-50 text-feather" : "text-eel-light hover:text-eel"
                 }`}
               >
@@ -52,18 +52,18 @@ export default function AdminNav() {
           })}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-2">
           <LanguageSwitcher />
           <Link
             href="/home"
-            className="rounded-xl px-3 py-2 text-sm font-heading font-bold text-macaw hover:underline"
+            className="rounded-xl px-2.5 py-1.5 text-sm font-heading font-bold text-macaw hover:underline lg:px-3 lg:py-2"
           >
             {t("admin.nav.kidMode")}
           </Link>
           <button
             type="button"
             onClick={handleLogout}
-            className="rounded-xl bg-cloud px-3 py-2 text-sm font-heading font-bold text-eel-light hover:text-cardinal"
+            className="rounded-xl bg-cloud px-2.5 py-1.5 text-sm font-heading font-bold text-eel-light hover:text-cardinal lg:px-3 lg:py-2"
           >
             {t("admin.nav.logout")}
           </button>

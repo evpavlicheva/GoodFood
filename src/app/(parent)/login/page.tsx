@@ -43,17 +43,20 @@ export default function AdminLoginPage() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
-            type="tel"
+            type="text"
             inputMode="numeric"
             pattern="[0-9]*"
-            autoComplete="one-time-code"
+            autoComplete="off"
             autoCorrect="off"
             autoCapitalize="off"
             spellCheck={false}
             autoFocus
             value={pin}
             onChange={(e) => {
-              setPin(e.target.value);
+              // Strip anything that isn't a digit so mobile keyboards / autocomplete
+              // can't inject invisible characters or non-numeric glyphs.
+              const digits = e.target.value.replace(/\D/g, "");
+              setPin(digits);
               setError(false);
             }}
             placeholder={t("admin.login.placeholder")}

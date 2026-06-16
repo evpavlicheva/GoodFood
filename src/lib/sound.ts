@@ -5,6 +5,29 @@
  * SpeechSynthesis, used by the reminder overlay.
  */
 
+// Pre-warmed Audio instance for the jingle MP3.
+// Browsers block autoplay unless the element was first touched inside a
+// user-gesture handler. primeYummyAudio() does play→pause during the first
+// user tap; after that play() works without a gesture.
+let yummyAudio: HTMLAudioElement | null = null;
+
+export function primeYummyAudio(): void {
+  if (typeof window === "undefined") return;
+  if (!yummyAudio) {
+    yummyAudio = new Audio("/sounds/yummy.mp3");
+    yummyAudio.preload = "auto";
+  }
+  // Unlock by playing silently then immediately pausing.
+  yummyAudio.volume = 0;
+  yummyAudio.play()
+    .then(() => {
+      yummyAudio!.pause();
+      yummyAudio!.currentTime = 0;
+      yummyAudio!.volume = 1;
+    })
+    .catch(() => {});
+}
+
 let sharedContext: AudioContext | null = null;
 
 function getAudioContext(): AudioContext | null {
@@ -54,13 +77,12 @@ function scheduleNote(ctx: AudioContext, note: Note, baseTime: number) {
 export function playYummyJingle(): number {
   if (typeof window !== "undefined") {
     try {
-      const audio = new Audio("/sounds/yummy.mp3");
+      // Use the pre-warmed element if available, otherwise create a new one.
+      const audio = yummyAudio ?? new Audio("/sounds/yummy.mp3");
+      audio.currentTime = 0;
       audio.volume = 1;
-      audio.play().catch(() => {
-        // Autoplay blocked — fall through to Web Audio below
-        playYummyJingleFallback();
-      });
-      return 3; // approximate mp3 duration
+      audio.play().catch(() => playYummyJingleFallback());
+      return 3;
     } catch {
       // ignore, fall through
     }

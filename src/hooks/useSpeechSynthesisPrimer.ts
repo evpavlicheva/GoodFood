@@ -1,32 +1,32 @@
 "use client";
 
 import { useEffect } from "react";
+import { primeYummyAudio } from "@/lib/sound";
 
 /**
- * Warms up SpeechSynthesis on the first user interaction so that subsequent
- * calls to speechSynthesis.speak() work without a direct user gesture.
- * Mobile browsers (iOS Safari, Chrome) require at least one speak() call
- * inside a user-event handler before allowing background calls.
+ * On the first user interaction (touch or click), unlocks both:
+ *  - SpeechSynthesis (speak a silent utterance)
+ *  - HTML Audio (play→pause the jingle MP3)
+ * After this, both APIs work without a direct user gesture — needed because
+ * the reminder overlay appears automatically on push and has no gesture.
  */
 export function useSpeechSynthesisPrimer() {
   useEffect(() => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-
-    let primed = false;
+    if (typeof window === "undefined") return;
 
     function prime() {
-      if (primed) return;
-      primed = true;
-      try {
-        const utt = new SpeechSynthesisUtterance(" ");
-        utt.volume = 0;
-        utt.rate = 10; // finish instantly
-        window.speechSynthesis.speak(utt);
-      } catch {
-        // ignore
+      // Unlock Audio
+      primeYummyAudio();
+
+      // Unlock SpeechSynthesis
+      if ("speechSynthesis" in window) {
+        try {
+          const utt = new SpeechSynthesisUtterance(" ");
+          utt.volume = 0;
+          utt.rate = 10;
+          window.speechSynthesis.speak(utt);
+        } catch { /* ignore */ }
       }
-      window.removeEventListener("touchstart", prime);
-      window.removeEventListener("click", prime);
     }
 
     window.addEventListener("touchstart", prime, { passive: true, once: true });

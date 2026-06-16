@@ -48,82 +48,111 @@ function scheduleNote(ctx: AudioContext, note: Note, baseTime: number) {
 }
 
 /**
- * "Yummy Time!" jingle — bright ascending fanfare + chord hit + sparkle,
- * followed by a synthesised voice saying "Yummy Time!".
+ * Schedules a "sung" syllable using a sawtooth oscillator through two
+ * bandpass filters — gives a rough vocal/singing timbre without any audio
+ * files or SpeechSynthesis (which is blocked on mobile without a user tap).
+ */
+function scheduleSung(
+  ctx: AudioContext,
+  freqStart: number,
+  freqEnd: number,
+  t0: number,
+  duration: number,
+  peakGain = 0.18,
+) {
+  const osc = ctx.createOscillator();
+  osc.type = "sawtooth";
+  osc.frequency.setValueAtTime(freqStart, t0);
+  osc.frequency.exponentialRampToValueAtTime(freqEnd, t0 + duration * 0.8);
+
+  // Two bandpass filters approximate the first two vocal formants.
+  const f1 = ctx.createBiquadFilter();
+  f1.type = "bandpass";
+  f1.frequency.value = 800;
+  f1.Q.value = 2.5;
+
+  const f2 = ctx.createBiquadFilter();
+  f2.type = "bandpass";
+  f2.frequency.value = 1400;
+  f2.Q.value = 3;
+
+  const gainNode = ctx.createGain();
+  gainNode.gain.setValueAtTime(0.0001, t0);
+  gainNode.gain.exponentialRampToValueAtTime(peakGain, t0 + 0.025);
+  gainNode.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
+
+  osc.connect(f1); osc.connect(f2);
+  f1.connect(gainNode); f2.connect(gainNode);
+  gainNode.connect(ctx.destination);
+  osc.start(t0);
+  osc.stop(t0 + duration + 0.02);
+}
+
+/**
+ * "Yummy Time!" jingle — bright fanfare then a "sung" Yum-my-Time melody
+ * using Web Audio formant synthesis (works on mobile without user gesture).
  */
 export function playYummyJingle(): number {
   const ctx = getAudioContext();
   if (!ctx) return 0;
 
-  // Force-resume the context (mobile browsers suspend it aggressively).
   ctx.resume().catch(() => {});
 
   const now = ctx.currentTime;
-  const TOTAL = 1.15;
+  const TOTAL = 1.6;
 
-  // — Silent keepalive oscillator: prevents iOS from suspending the context
-  //   mid-jingle when the tab briefly goes to the background on push arrival.
+  // Periodic resume guard — iOS loves to suspend the context mid-playback.
+  const guard = setInterval(() => ctx.resume().catch(() => {}), 80);
+  setTimeout(() => clearInterval(guard), TOTAL * 1000 + 200);
+
+  // — Silent keepalive —
   const keepalive = ctx.createOscillator();
   const keepGain = ctx.createGain();
-  keepGain.gain.value = 0; // completely silent
+  keepGain.gain.value = 0;
   keepalive.connect(keepGain);
   keepGain.connect(ctx.destination);
   keepalive.start(now);
   keepalive.stop(now + TOTAL + 0.1);
 
-  // — Kick drum (pitch-swept sine) —
+  // — Kick drum —
   const kick = ctx.createOscillator();
   const kickGain = ctx.createGain();
   kick.type = "sine";
-  kick.frequency.setValueAtTime(220, now);
+  kick.frequency.setValueAtTime(200, now);
   kick.frequency.exponentialRampToValueAtTime(40, now + 0.18);
-  kickGain.gain.setValueAtTime(0.55, now);
+  kickGain.gain.setValueAtTime(0.5, now);
   kickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
-  kick.connect(kickGain);
-  kickGain.connect(ctx.destination);
-  kick.start(now);
-  kick.stop(now + 0.2);
+  kick.connect(kickGain); kickGain.connect(ctx.destination);
+  kick.start(now); kick.stop(now + 0.2);
 
-  // — Melody: quick ascending run → chord hit → sparkle bounce —
-  const notes: Note[] = [
-    // Ascending run (C5 E5 G5 C6)
+  // — Fanfare melody (C5 → E5 → G5 → C6 run, then chord) —
+  const fanfare: Note[] = [
     { freq: 523.25, start: 0.0,  duration: 0.07 },
     { freq: 659.25, start: 0.07, duration: 0.07 },
     { freq: 783.99, start: 0.14, duration: 0.07 },
     { freq: 1046.5, start: 0.21, duration: 0.07 },
-
-    // Big chord hit — C major
-    { freq: 1318.5, start: 0.28, duration: 0.22, gain: 0.32 },         // E6
-    { freq: 1046.5, start: 0.28, duration: 0.22, gain: 0.22 },         // C6
-    { freq: 659.25, start: 0.28, duration: 0.22, gain: 0.18, type: "sine" }, // E5
-
-    // Sparkle
-    { freq: 1568.0, start: 0.52, duration: 0.09, gain: 0.22 },         // G6
-    { freq: 1760.0, start: 0.61, duration: 0.09, gain: 0.22 },         // A6
-    { freq: 2093.0, start: 0.70, duration: 0.09, gain: 0.20 },         // C7
-
-    // Resolve
-    { freq: 1046.5, start: 0.82, duration: 0.30, gain: 0.30 },         // C6
-    { freq: 1318.5, start: 0.82, duration: 0.30, gain: 0.18, type: "sine" }, // E6
+    // Chord hit
+    { freq: 1318.5, start: 0.28, duration: 0.20, gain: 0.30 },
+    { freq: 1046.5, start: 0.28, duration: 0.20, gain: 0.20 },
+    { freq: 659.25, start: 0.28, duration: 0.20, gain: 0.15, type: "sine" },
   ];
+  for (const n of fanfare) scheduleNote(ctx, n, now);
 
-  for (const note of notes) {
-    scheduleNote(ctx, note, now);
-  }
+  // — Sung "Yum-my Time!" (sawtooth + formant filters) —
+  // "Yum"  E4→G4
+  scheduleSung(ctx, 329.63, 392.00, now + 0.55, 0.22, 0.22);
+  // "my"   G4→A4
+  scheduleSung(ctx, 392.00, 440.00, now + 0.80, 0.18, 0.20);
+  // "Time!" A4→C5 (rising exclamation)
+  scheduleSung(ctx, 440.00, 523.25, now + 1.01, 0.28, 0.24);
 
-  // — Voice: "Yummy Time!" via SpeechSynthesis —
-  if (typeof window !== "undefined" && "speechSynthesis" in window) {
-    const say = () => {
-      const utt = new SpeechSynthesisUtterance("Yummy Time!");
-      utt.lang = "en-US";
-      utt.rate = 1.05;
-      utt.pitch = 1.6;
-      utt.volume = 1;
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utt);
-    };
-    setTimeout(say, 320);
-  }
+  // — Sparkle over the voice —
+  const sparkle: Note[] = [
+    { freq: 2093.0, start: 0.56, duration: 0.07, gain: 0.16 }, // C7
+    { freq: 1760.0, start: 0.82, duration: 0.07, gain: 0.14 }, // A6
+    { freq: 2093.0, start: 1.02, duration: 0.10, gain: 0.16 }, // C7
+  ];
+  for (const n of sparkle) scheduleNote(ctx, n, now);
 
   return TOTAL;
 }

@@ -2,7 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
-import { CATEGORIES, DEFAULT_COIN_VALUE, type Dish, type DishAnalysis, type DishCategory } from "@/data/dishes";
+import { CATEGORIES, CATEGORY_EMOJI, DEFAULT_COIN_VALUE, type Dish, type DishAnalysis, type DishCategory } from "@/data/dishes";
+import { useCustomCategories } from "@/hooks/useCustomCategories";
 import { analyzeDishPhoto } from "@/lib/ai/analyzeDish";
 import { resizeImageDataUrl } from "@/lib/image";
 import { uploadDishImage } from "@/lib/supabase/storage";
@@ -21,7 +22,8 @@ interface DishFormProps {
 const EMPTY_ANALYSIS: DishAnalysis = { calories: 0, protein: 0, fat: 0, carbs: 0, funFact: "" };
 
 export default function DishForm({ initial, submitLabel, onSubmit, onDelete }: DishFormProps) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const { customCategories } = useCustomCategories();
   const [name, setName] = useState(initial?.name ?? "");
   const [nameRu, setNameRu] = useState(initial?.nameRu ?? "");
   const [category, setCategory] = useState<DishCategory>(initial?.category ?? CATEGORIES[0]);
@@ -223,11 +225,22 @@ export default function DishForm({ initial, submitLabel, onSubmit, onDelete }: D
             onChange={(e) => setCategory(e.target.value as DishCategory)}
             className="w-full rounded-xl border-2 border-cloud bg-cloud px-3 py-2 text-eel outline-none focus:border-feather"
           >
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {t(`categories.${c}`)}
-              </option>
-            ))}
+            <optgroup label="—">
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>
+                  {CATEGORY_EMOJI[c]} {t(`categories.${c}`)}
+                </option>
+              ))}
+            </optgroup>
+            {customCategories.length > 0 && (
+              <optgroup label="✦ Custom">
+                {customCategories.map((c) => (
+                  <option key={c.id} value={c.name}>
+                    {c.emoji} {lang === "ru" && c.nameRu ? c.nameRu : c.name}
+                  </option>
+                ))}
+              </optgroup>
+            )}
           </select>
         </div>
 

@@ -13,9 +13,10 @@ export default function AdminNav() {
   const { t } = useLanguage();
 
   const NAV_LINKS = [
-    { href: "/dashboard", label: t("admin.nav.orders"), emoji: "🧾" },
     { href: "/menu-manager", label: t("admin.nav.menu"), emoji: "🍽️" },
+    { href: "/dashboard", label: t("admin.nav.orders"), emoji: "🧾" },
     { href: "/ingredients", label: t("admin.nav.ingredients"), emoji: "🥕" },
+    { href: "/categories", label: t("admin.nav.categories"), emoji: "🏷️" },
     { href: "/notifications", label: t("admin.nav.notifications"), emoji: "🔔" },
   ];
 

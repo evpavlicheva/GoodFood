@@ -27,48 +27,48 @@ export default function AdminNav() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-cloud bg-white/90 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3">
-        <div className="flex shrink-0 items-center gap-2">
+      {/* Top row: logo + controls */}
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 pt-3 pb-2">
+        <div className="flex items-center gap-2">
           <span className="text-2xl">🥦</span>
-          <span className="font-heading text-base font-extrabold text-eel lg:text-lg">
+          <span className="font-heading text-base font-extrabold text-eel">
             {t("admin.nav.brand")} <span className="text-feather">{t("admin.nav.brandSuffix")}</span>
           </span>
         </div>
-
-        <nav className="flex flex-1 flex-wrap items-center gap-1">
-          {NAV_LINKS.map((link) => {
-            const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`rounded-xl px-2.5 py-1.5 text-sm font-heading font-bold transition-colors lg:px-3 lg:py-2 ${
-                  active ? "bg-feather-50 text-feather" : "text-eel-light hover:text-eel"
-                }`}
-              >
-                {link.emoji} {link.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="ml-auto flex shrink-0 items-center gap-2">
+        <div className="flex items-center gap-2">
           <LanguageSwitcher />
           <Link
             href="/home"
-            className="rounded-xl px-2.5 py-1.5 text-sm font-heading font-bold text-macaw hover:underline lg:px-3 lg:py-2"
+            className="rounded-xl px-3 py-1.5 text-sm font-heading font-bold text-macaw hover:underline"
           >
             {t("admin.nav.kidMode")}
           </Link>
           <button
             type="button"
             onClick={handleLogout}
-            className="rounded-xl bg-cloud px-2.5 py-1.5 text-sm font-heading font-bold text-eel-light hover:text-cardinal lg:px-3 lg:py-2"
+            className="rounded-xl bg-cloud px-3 py-1.5 text-sm font-heading font-bold text-eel-light hover:text-cardinal"
           >
             {t("admin.nav.logout")}
           </button>
         </div>
       </div>
+      {/* Bottom row: nav links */}
+      <nav className="mx-auto flex max-w-5xl items-center gap-1 overflow-x-auto px-4 pb-2">
+        {NAV_LINKS.map((link) => {
+          const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`shrink-0 rounded-xl px-3 py-1.5 text-sm font-heading font-bold transition-colors ${
+                active ? "bg-feather-50 text-feather" : "text-eel-light hover:text-eel"
+              }`}
+            >
+              {link.emoji} {link.label}
+            </Link>
+          );
+        })}
+      </nav>
     </header>
   );
 }

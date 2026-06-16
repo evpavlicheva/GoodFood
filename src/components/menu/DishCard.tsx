@@ -6,6 +6,7 @@ import { getCoinValue, getDishName, getDishTip, isSnack as isSnackDish, type Dis
 import { useCart, type Portion } from "@/context/CartContext";
 import { useChildProfile } from "@/context/ChildProfileContext";
 import { useLanguage } from "@/context/LanguageContext";
+import GoldCoin from "@/components/ui/GoldCoin";
 
 interface DishCardProps {
   dish: Dish;
@@ -77,10 +78,11 @@ export default function DishCard({ dish }: DishCardProps) {
           </div>
         )}
         <span
-          className={`absolute left-3 top-3 rounded-full px-3 py-1 text-sm font-extrabold shadow-card ${
+          className={`absolute left-3 top-3 flex items-center gap-1 rounded-full px-3 py-1 text-sm font-extrabold shadow-card ${
             snack ? "bg-bee text-eel" : "bg-feather-50 text-feather-700"
           }`}
         >
+          <GoldCoin size={14} />
           {snack ? t("menu.coinsCost", { count: coinValue }) : t("menu.earnCoins", { count: coinValue })}
         </span>
         <span className="absolute right-3 top-3 rounded-full bg-white px-3 py-1 text-sm font-extrabold text-eel shadow-card">

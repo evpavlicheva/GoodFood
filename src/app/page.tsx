@@ -58,28 +58,14 @@ export default function HomePage() {
 
       {/* ── Illustration ── */}
       <div className="mx-auto max-w-2xl px-5 sm:px-8">
-        <div className="flex overflow-hidden rounded-3xl shadow-card">
-          <div className="relative aspect-square flex-1">
-            <Image
-              src="/screen/splash-left.jpg"
-              alt=""
-              fill
-              priority
-              sizes="(min-width: 640px) 320px, 45vw"
-              className="object-cover"
-            />
-          </div>
-          <div className="relative aspect-square flex-1">
-            <Image
-              src="/screen/splash-right.jpg"
-              alt=""
-              fill
-              priority
-              sizes="(min-width: 640px) 320px, 45vw"
-              className="object-cover"
-            />
-          </div>
-        </div>
+        <Image
+          src="/screen/splash-hero.png"
+          alt=""
+          width={760}
+          height={520}
+          priority
+          className="w-full h-auto"
+        />
       </div>
 
       {/* ── Play button ── */}

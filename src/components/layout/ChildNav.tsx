@@ -6,28 +6,29 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import ProfileSwitcher from "@/components/layout/ProfileSwitcher";
-import GoldCoin from "@/components/ui/GoldCoin";
 import { useCart } from "@/context/CartContext";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useChildProfile } from "@/hooks/useChildProfile";
 import { useLanguage } from "@/context/LanguageContext";
 
-/* ── SVG icons (from design doc) ── */
+/* ── SVG icons ── */
 function IconHome({ active }: { active: boolean }) {
+  const c = active ? "#ffffff" : "#58cc02";
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M4 11.2 11 5.2a1.5 1.5 0 0 1 2 0l7 6" stroke="#ffffff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M5.6 10v8.2a1 1 0 0 0 1 1H10v-4.4a2 2 0 0 1 4 0V19.2h3.4a1 1 0 0 0 1-1V10" fill="#ffffff" />
+      <path d="M4 11.2 11 5.2a1.5 1.5 0 0 1 2 0l7 6" stroke={c} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M5.6 10v8.2a1 1 0 0 0 1 1H10v-4.4a2 2 0 0 1 4 0V19.2h3.4a1 1 0 0 0 1-1V10" fill={c} />
     </svg>
   );
 }
 
-function IconCart() {
+function IconCart({ active }: { active: boolean }) {
+  const c = active ? "#ffffff" : "#58cc02";
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M4 5h2.2l1.4 8.4a1.6 1.6 0 0 0 1.6 1.3h7a1.6 1.6 0 0 0 1.55-1.2L19 8.3H7.2" stroke="#58cc02" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="9.5" cy="19" r="1.8" fill="#58cc02" />
-      <circle cx="16.5" cy="19" r="1.8" fill="#58cc02" />
+      <path d="M4 5h2.2l1.4 8.4a1.6 1.6 0 0 0 1.6 1.3h7a1.6 1.6 0 0 0 1.55-1.2L19 8.3H7.2" stroke={c} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="9.5" cy="19" r="1.8" fill={c} />
+      <circle cx="16.5" cy="19" r="1.8" fill={c} />
     </svg>
   );
 }
@@ -46,15 +47,14 @@ function IconCookie() {
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <circle cx="12" cy="12" r="9" fill="#f2b85a" />
       <path d="M12 3a9 9 0 0 0 0 18 9 9 0 0 0 8.5-6.1 2.4 2.4 0 0 1-3-3A9 9 0 0 1 12 3Z" fill="#e2a23f" />
-      <circle cx="9"   cy="9.5"  r="1.4" fill="#8a5a1e" />
-      <circle cx="14.5" cy="8.5" r="1.2" fill="#8a5a1e" />
-      <circle cx="13.5" cy="14" r="1.4" fill="#8a5a1e" />
-      <circle cx="8.5"  cy="14" r="1.1" fill="#8a5a1e" />
+      <circle cx="9"    cy="9.5"  r="1.4" fill="#8a5a1e" />
+      <circle cx="14.5" cy="8.5"  r="1.2" fill="#8a5a1e" />
+      <circle cx="13.5" cy="14"   r="1.4" fill="#8a5a1e" />
+      <circle cx="8.5"  cy="14"   r="1.1" fill="#8a5a1e" />
     </svg>
   );
 }
 
-/* Shared button classes */
 const SQ = "flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] transition-colors";
 
 export default function ChildNav() {
@@ -69,50 +69,29 @@ export default function ChildNav() {
 
   return (
     <header className="sticky top-0 z-40 border-b-2 border-[#eef0ea] bg-white">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
+      <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3">
 
-        {/* Logo — left side */}
-        <Link href="/" className="flex shrink-0 items-center gap-2">
-          <div className="relative h-[46px] w-[46px] shrink-0">
-            <Image src="/mascots/broccoli.png" alt="" fill sizes="46px" className="object-contain drop-shadow-sm" />
-          </div>
-          <span className="hidden font-heading text-xl font-extrabold text-[#3c4a2e] sm:inline">GoodFood</span>
-        </Link>
-
-        {/* Right-side controls — exactly per design doc */}
+        {/* LEFT: logo + home */}
         <div className="flex shrink-0 items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="relative h-[46px] w-[46px] shrink-0">
+              <Image src="/mascots/broccoli.png" alt="" fill sizes="46px" className="object-contain drop-shadow-sm" />
+            </div>
+            <span className="hidden font-heading text-xl font-extrabold text-[#3c4a2e] sm:inline">GoodFood</span>
+          </Link>
 
-          {/* Coin/rewards badge */}
-          {profile && (
-            <Link
-              href="/buddies"
-              aria-label={t("coins.balanceLabel")}
-              className="flex h-11 shrink-0 items-center gap-2 rounded-[14px] border-2 border-[#eef0ea] bg-white px-3 text-sm font-extrabold text-[#3c4a2e]"
-            >
-              <IconCookie />
-              {profile.coins}
-            </Link>
-          )}
-
-          {/* Language */}
-          <LanguageSwitcher />
-
-          {/* Home */}
+          {/* Home button — next to logo */}
           <Link
             href="/home"
             aria-label={t("nav.home")}
             className={`${SQ} ${homeActive ? "border-2 border-[#58cc02] bg-[#58cc02]" : "border-2 border-[#eef0ea] bg-white"}`}
           >
-            {homeActive
-              ? <IconHome active={true} />
-              : (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M4 11.2 11 5.2a1.5 1.5 0 0 1 2 0l7 6" stroke="#58cc02" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M5.6 10v8.2a1 1 0 0 0 1 1H10v-4.4a2 2 0 0 1 4 0V19.2h3.4a1 1 0 0 0 1-1V10" fill="#58cc02" />
-                </svg>
-              )
-            }
+            <IconHome active={homeActive} />
           </Link>
+        </div>
+
+        {/* CENTER: cart + coin badge */}
+        <div className="flex flex-1 items-center justify-center gap-2">
 
           {/* Cart */}
           <Link
@@ -120,16 +99,7 @@ export default function ChildNav() {
             aria-label={t("nav.cart")}
             className={`${SQ} relative border-2 ${cartActive ? "border-[#58cc02] bg-[#58cc02]" : "border-[#eef0ea] bg-white"}`}
           >
-            {cartActive
-              ? (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M4 5h2.2l1.4 8.4a1.6 1.6 0 0 0 1.6 1.3h7a1.6 1.6 0 0 0 1.55-1.2L19 8.3H7.2" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="9.5" cy="19" r="1.8" fill="#fff" />
-                  <circle cx="16.5" cy="19" r="1.8" fill="#fff" />
-                </svg>
-              )
-              : <IconCart />
-            }
+            <IconCart active={cartActive} />
             <AnimatePresence>
               {totalCount > 0 && (
                 <motion.span
@@ -146,6 +116,22 @@ export default function ChildNav() {
             </AnimatePresence>
           </Link>
 
+          {/* Coin/cookie badge */}
+          {profile && (
+            <Link
+              href="/buddies"
+              aria-label={t("coins.balanceLabel")}
+              className="flex h-11 shrink-0 items-center gap-2 rounded-[14px] border-2 border-[#eef0ea] bg-white px-3 text-sm font-extrabold text-[#3c4a2e]"
+            >
+              <IconCookie />
+              {profile.coins}
+            </Link>
+          )}
+        </div>
+
+        {/* RIGHT: parent mode + language + profile */}
+        <div className="flex shrink-0 items-center gap-2">
+
           {/* Switch to parent mode */}
           <Link
             href={isAuthenticated ? "/dashboard" : "/login"}
@@ -155,9 +141,13 @@ export default function ChildNav() {
             <IconParent />
           </Link>
 
+          {/* Language */}
+          <LanguageSwitcher />
+
           {/* Profile switcher */}
           <ProfileSwitcher />
         </div>
+
       </div>
     </header>
   );

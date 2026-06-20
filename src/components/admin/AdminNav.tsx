@@ -122,7 +122,7 @@ export default function AdminNav() {
                 className={`${BTN} shrink-0 px-3 ${active ? "bg-[#eef7e3] text-[#3c9500]" : "text-[#5a6150] hover:bg-[#f6f8f2]"}`}
               >
                 <Icon active={active} />
-                <span className="hidden xl:inline">{label}</span>
+                <span>{label}</span>
               </Link>
             );
           })}
@@ -136,7 +136,7 @@ export default function AdminNav() {
             className={`${BTN} border-2 border-[#d7edbc] bg-[#eef7e3] px-3 text-[#3c9500]`}
           >
             <IconKidMode />
-            <span className="hidden lg:inline">{t("admin.nav.kidMode")}</span>
+            <span className="hidden sm:inline">{t("admin.nav.kidMode")}</span>
           </Link>
           <button
             type="button"
@@ -144,7 +144,7 @@ export default function AdminNav() {
             className={`${BTN} border-2 border-[#eef0ea] bg-white px-3 text-[#7c8273] hover:text-cardinal`}
           >
             <IconLogout />
-            <span className="hidden lg:inline">{t("admin.nav.logout")}</span>
+            <span className="hidden sm:inline">{t("admin.nav.logout")}</span>
           </button>
         </div>
 

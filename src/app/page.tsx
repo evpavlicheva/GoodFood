@@ -57,7 +57,7 @@ export default function HomePage() {
       </div>
 
       {/* ── Illustration ── */}
-      <div className="mx-auto max-w-2xl px-5 sm:px-8">
+      <div className="relative mx-auto max-w-2xl px-5 sm:px-8">
         <Image
           src="/screen/splash-hero.png"
           alt=""
@@ -66,6 +66,36 @@ export default function HomePage() {
           priority
           className="w-full h-auto"
         />
+        {/* Arrow + phone overlay — matches design doc SVG (viewBox 820×470) */}
+        <svg
+          viewBox="0 0 820 470"
+          preserveAspectRatio="xMidYMid meet"
+          className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+          aria-hidden="true"
+        >
+          <defs>
+            <marker id="ffArrow" markerWidth="6" markerHeight="6" refX="3.2" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#ff8a3d" />
+            </marker>
+          </defs>
+          {/* Dashed curved arrow */}
+          <path
+            d="M 268 122 Q 339 45 422 129"
+            fill="none"
+            stroke="#ff8a3d"
+            strokeWidth="5.5"
+            strokeLinecap="round"
+            strokeDasharray="0.5 16"
+            markerEnd="url(#ffArrow)"
+          />
+          {/* Phone icon */}
+          <g transform="rotate(-15 342 69)">
+            <rect x="327" y="44" width="30" height="50" rx="7" fill="#3a3f47" />
+            <rect x="330.5" y="50" width="23" height="38" rx="3.5" fill="#d3e7f6" />
+            <rect x="337" y="46.5" width="10" height="2" rx="1" fill="#5b6470" />
+            <circle cx="342" cy="90.5" r="1.6" fill="#5b6470" />
+          </g>
+        </svg>
       </div>
 
       {/* ── Play button ── */}

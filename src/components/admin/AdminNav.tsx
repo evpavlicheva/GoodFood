@@ -75,7 +75,7 @@ function IconLogout() {
   );
 }
 
-const BTN = "h-11 box-border flex items-center gap-2 rounded-[14px] text-sm font-extrabold transition-colors";
+const BTN = "h-11 box-border flex items-center gap-1.5 rounded-[14px] text-sm font-extrabold transition-colors";
 
 export default function AdminNav() {
   const pathname = usePathname();
@@ -84,10 +84,10 @@ export default function AdminNav() {
   const { t } = useLanguage();
 
   const NAV_LINKS = [
-    { href: "/menu-manager", label: t("admin.nav.menu"),        Icon: IconMenu },
-    { href: "/dashboard",    label: t("admin.nav.orders"),      Icon: IconOrders },
-    { href: "/ingredients",  label: t("admin.nav.ingredients"), Icon: IconIngredients },
-    { href: "/categories",   label: t("admin.nav.categories"),  Icon: IconCategories },
+    { href: "/menu-manager", label: t("admin.nav.menu"),         Icon: IconMenu },
+    { href: "/dashboard",    label: t("admin.nav.orders"),       Icon: IconOrders },
+    { href: "/ingredients",  label: t("admin.nav.ingredients"),  Icon: IconIngredients },
+    { href: "/categories",   label: t("admin.nav.categories"),   Icon: IconCategories },
     { href: "/notifications",label: t("admin.nav.notifications"),Icon: IconReminders },
   ];
 
@@ -98,53 +98,53 @@ export default function AdminNav() {
 
   return (
     <header className="sticky top-0 z-40 border-b-2 border-[#eef0ea] bg-white">
-      <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3 lg:gap-5">
+      <div className="mx-auto flex max-w-5xl items-center gap-2 px-3 py-3">
 
         {/* Logo */}
-        <Link href="/menu-manager" className="flex shrink-0 items-center gap-2.5">
-          <div className="relative h-[46px] w-[46px] shrink-0">
-            <Image src="/mascots/broccoli.png" alt="" fill sizes="46px" className="object-contain drop-shadow-sm" />
+        <Link href="/menu-manager" className="flex shrink-0 items-center gap-2">
+          <div className="relative h-[40px] w-[40px] shrink-0">
+            <Image src="/mascots/broccoli.png" alt="" fill sizes="40px" className="object-contain drop-shadow-sm" />
           </div>
-          <div className="flex flex-col leading-none">
-            <span className="font-heading text-xl font-extrabold text-[#3c4a2e]">{t("admin.nav.brand")}</span>
-            <span className="text-xs font-extrabold tracking-wide text-[#58cc02]">{t("admin.nav.brandSuffix")}</span>
+          <div className="hidden flex-col leading-none md:flex">
+            <span className="font-heading text-lg font-extrabold text-[#3c4a2e]">{t("admin.nav.brand")}</span>
+            <span className="text-[11px] font-extrabold tracking-wide text-[#58cc02]">{t("admin.nav.brandSuffix")}</span>
           </div>
         </Link>
 
         {/* Nav links */}
-        <nav className="flex flex-1 items-center gap-0.5 overflow-x-auto">
+        <nav className="flex flex-1 items-center gap-0.5">
           {NAV_LINKS.map(({ href, label, Icon }) => {
             const active = pathname === href || pathname.startsWith(`${href}/`);
             return (
               <Link
                 key={href}
                 href={href}
-                className={`${BTN} shrink-0 px-3 ${active ? "bg-[#eef7e3] text-[#3c9500]" : "text-[#5a6150] hover:bg-[#f6f8f2]"}`}
+                className={`${BTN} shrink-0 px-2 md:px-2.5 ${active ? "bg-[#eef7e3] text-[#3c9500]" : "text-[#5a6150] hover:bg-[#f6f8f2]"}`}
               >
                 <Icon active={active} />
-                <span>{label}</span>
+                <span className="hidden lg:inline">{label}</span>
               </Link>
             );
           })}
         </nav>
 
         {/* Right controls */}
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1.5">
           <LanguageSwitcher />
           <Link
             href="/home"
-            className={`${BTN} border-2 border-[#d7edbc] bg-[#eef7e3] px-3 text-[#3c9500]`}
+            className={`${BTN} border-2 border-[#d7edbc] bg-[#eef7e3] px-2 md:px-3 text-[#3c9500]`}
           >
             <IconKidMode />
-            <span className="hidden sm:inline">{t("admin.nav.kidMode")}</span>
+            <span className="hidden md:inline">{t("admin.nav.kidMode")}</span>
           </Link>
           <button
             type="button"
             onClick={handleLogout}
-            className={`${BTN} border-2 border-[#eef0ea] bg-white px-3 text-[#7c8273] hover:text-cardinal`}
+            className={`${BTN} border-2 border-[#eef0ea] bg-white px-2 md:px-3 text-[#7c8273] hover:text-cardinal`}
           >
             <IconLogout />
-            <span className="hidden sm:inline">{t("admin.nav.logout")}</span>
+            <span className="hidden md:inline">{t("admin.nav.logout")}</span>
           </button>
         </div>
 

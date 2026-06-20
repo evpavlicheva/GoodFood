@@ -17,6 +17,7 @@ const en = {
   },
   landing: {
     headline: "Easy Food",
+    badge: "For Picky Eaters",
     subtitle: "Turn Mealtime into a Game for Picky Eaters",
     cta: "Let's go!",
     play: "Play",
@@ -297,6 +298,7 @@ const ru: typeof en = {
   },
   landing: {
     headline: "Easy Food",
+    badge: "Для привередливых",
     subtitle: "Превращаем еду в игру для маленьких приверед",
     cta: "Вперёд!",
     play: "Играть",

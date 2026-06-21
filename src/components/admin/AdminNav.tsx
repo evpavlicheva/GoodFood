@@ -103,7 +103,7 @@ export default function AdminNav() {
         {/* Logo */}
         <Link href="/menu-manager" className="flex shrink-0 items-center gap-2">
           <div className="relative h-[40px] w-[40px] shrink-0">
-            <Image src="/mascots/broccoli.png" alt="" fill sizes="40px" className="object-contain drop-shadow-sm" />
+            <Image src="/icons/logo.png" alt="" fill sizes="40px" className="object-contain" />
           </div>
           <div className="hidden flex-col leading-none md:flex">
             <span className="font-heading text-lg font-extrabold text-[#3c4a2e]">{t("admin.nav.brand")}</span>

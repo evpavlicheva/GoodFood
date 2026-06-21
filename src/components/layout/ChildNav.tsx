@@ -75,7 +75,7 @@ export default function ChildNav() {
         <div className="flex shrink-0 items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
             <div className="relative h-[46px] w-[46px] shrink-0">
-              <Image src="/mascots/broccoli.png" alt="" fill sizes="46px" className="object-contain drop-shadow-sm" />
+              <Image src="/icons/logo.png" alt="" fill sizes="46px" className="object-contain" />
             </div>
             <span className="hidden font-heading text-xl font-extrabold text-[#3c4a2e] sm:inline">GoodFood</span>
           </Link>

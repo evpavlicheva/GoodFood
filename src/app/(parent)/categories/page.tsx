@@ -5,10 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CATEGORIES, CATEGORY_EMOJI } from "@/data/dishes";
 import { useCustomCategories } from "@/hooks/useCustomCategories";
 import { useLanguage } from "@/context/LanguageContext";
+import { useFeatureFlags } from "@/context/FeatureFlagsContext";
 
 export default function CategoriesPage() {
   const { t, lang } = useLanguage();
   const { customCategories, loading, addCategory, deleteCategory } = useCustomCategories();
+  const { coinsEnabled, setCoinsEnabled } = useFeatureFlags();
   const [name, setName] = useState("");
   const [nameRu, setNameRu] = useState("");
   const [emoji, setEmoji] = useState("🍴");
@@ -32,6 +34,39 @@ export default function CategoriesPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-8">
+      {/* ── App Settings ── */}
+      <div className="mb-8 rounded-2xl border-2 border-[#eef0ea] bg-white p-5">
+        <p className="mb-4 font-heading text-xs font-extrabold uppercase tracking-wider text-eel-light">
+          {t("admin.settings.title")}
+        </p>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="font-heading font-extrabold text-eel">
+              🪙 {t("admin.settings.coinsEnabled")}
+            </p>
+            <p className="mt-0.5 text-sm text-eel-light">
+              {t("admin.settings.coinsEnabledDesc")}
+            </p>
+          </div>
+          {/* Toggle switch */}
+          <button
+            type="button"
+            role="switch"
+            aria-checked={coinsEnabled}
+            onClick={() => setCoinsEnabled(!coinsEnabled)}
+            className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${
+              coinsEnabled ? "bg-feather" : "bg-wolf"
+            }`}
+          >
+            <span
+              className={`pointer-events-none inline-block h-6 w-6 rounded-full bg-white shadow-md transition-transform duration-200 ${
+                coinsEnabled ? "translate-x-5" : "translate-x-0"
+              }`}
+            />
+          </button>
+        </div>
+      </div>
+
       <div className="mb-6">
         <h1 className="font-heading text-2xl font-extrabold text-eel">
           {t("admin.categories.title")}

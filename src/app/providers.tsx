@@ -6,6 +6,7 @@ import { OrdersProvider } from "@/context/OrdersContext";
 import { MenuProvider } from "@/context/MenuContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ChildProfileProvider } from "@/context/ChildProfileContext";
+import { FeatureFlagsProvider } from "@/context/FeatureFlagsContext";
 
 /**
  * App-wide client providers. Shared by both the child and parent route
@@ -14,14 +15,16 @@ import { ChildProfileProvider } from "@/context/ChildProfileContext";
  */
 export default function Providers({ children }: { children: ReactNode }) {
   return (
-    <LanguageProvider>
-      <ChildProfileProvider>
-        <MenuProvider>
-          <CartProvider>
-            <OrdersProvider>{children}</OrdersProvider>
-          </CartProvider>
-        </MenuProvider>
-      </ChildProfileProvider>
-    </LanguageProvider>
+    <FeatureFlagsProvider>
+      <LanguageProvider>
+        <ChildProfileProvider>
+          <MenuProvider>
+            <CartProvider>
+              <OrdersProvider>{children}</OrdersProvider>
+            </CartProvider>
+          </MenuProvider>
+        </ChildProfileProvider>
+      </LanguageProvider>
+    </FeatureFlagsProvider>
   );
 }

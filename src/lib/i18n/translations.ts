@@ -260,6 +260,11 @@ const en = {
       markAll: "Enable all",
       loading: "Loading ingredients…",
     },
+    settings: {
+      title: "App Settings",
+      coinsEnabled: "Coin system",
+      coinsEnabledDesc: "Children earn coins for healthy meals and spend them on snacks & buddies",
+    },
     categories: {
       title: "Custom Categories 🏷️",
       subtitle: "Add your own meal categories. They'll appear alongside the built-in ones when adding dishes and in the child menu.",
@@ -540,6 +545,11 @@ const ru: typeof en = {
       unavailableCount: "{count} недоступно",
       markAll: "Включить все",
       loading: "Загрузка ингредиентов…",
+    },
+    settings: {
+      title: "Настройки приложения",
+      coinsEnabled: "Система монет",
+      coinsEnabledDesc: "Дети зарабатывают монеты за здоровую еду и тратят их на снеки и персонажей",
     },
     categories: {
       title: "Свои категории 🏷️",

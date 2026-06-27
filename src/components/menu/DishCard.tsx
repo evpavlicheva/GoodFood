@@ -6,6 +6,7 @@ import { getCoinValue, getDishName, getDishTip, isSnack as isSnackDish, type Dis
 import { useCart, type Portion } from "@/context/CartContext";
 import { useChildProfile } from "@/context/ChildProfileContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { useFeatureFlags } from "@/context/FeatureFlagsContext";
 import GoldCoin from "@/components/ui/GoldCoin";
 
 interface DishCardProps {
@@ -22,6 +23,7 @@ export default function DishCard({ dish }: DishCardProps) {
   const { items, addItem } = useCart();
   const { spendCoins } = useChildProfile();
   const { t, lang } = useLanguage();
+  const { coinsEnabled } = useFeatureFlags();
 
   const name = getDishName(dish, lang);
   const tip = getDishTip(dish, lang);
@@ -34,7 +36,7 @@ export default function DishCard({ dish }: DishCardProps) {
   function handleAdd() {
     if (!isAvailable) return;
 
-    if (snack) {
+    if (snack && coinsEnabled) {
       if (!spendCoins(coinValue)) {
         setShowCoinMessage(true);
         setTimeout(() => setShowCoinMessage(false), 2400);
@@ -77,14 +79,16 @@ export default function DishCard({ dish }: DishCardProps) {
             {dish.emoji}
           </div>
         )}
-        <span
-          className={`absolute left-3 top-3 flex items-center gap-1 rounded-full px-3 py-1 text-sm font-extrabold shadow-card ${
-            snack ? "bg-white text-eel" : "bg-feather-50 text-feather-700"
-          }`}
-        >
-          <GoldCoin size={16} />
-          {snack ? t("menu.coinsCost", { count: coinValue }) : t("menu.earnCoins", { count: coinValue })}
-        </span>
+        {coinsEnabled && (
+          <span
+            className={`absolute left-3 top-3 flex items-center gap-1 rounded-full px-3 py-1 text-sm font-extrabold shadow-card ${
+              snack ? "bg-white text-eel" : "bg-feather-50 text-feather-700"
+            }`}
+          >
+            <GoldCoin size={16} />
+            {snack ? t("menu.coinsCost", { count: coinValue }) : t("menu.earnCoins", { count: coinValue })}
+          </span>
+        )}
         <span className="absolute right-3 top-3 rounded-full bg-white px-3 py-1 text-sm font-extrabold text-eel shadow-card">
           ⏱ {dish.prepTime} {t("menu.min")}
         </span>

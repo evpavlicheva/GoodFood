@@ -11,6 +11,7 @@ import { useCart } from "@/context/CartContext";
 import { useOrders } from "@/context/OrdersContext";
 import { useChildProfile } from "@/hooks/useChildProfile";
 import { useLanguage } from "@/context/LanguageContext";
+import { useFeatureFlags } from "@/context/FeatureFlagsContext";
 import { generateMotivationalMessage } from "@/lib/motivation";
 
 export default function CartPage() {
@@ -19,10 +20,11 @@ export default function CartPage() {
   const { items, removeItem, updateQuantity, clearCart, totalCount } = useCart();
   const { addOrder } = useOrders();
   const { profile, addCoins, spendCoins } = useChildProfile();
+  const { coinsEnabled } = useFeatureFlags();
 
-  const coinsToEarn = items
-    .filter((item) => !item.isSnack)
-    .reduce((sum, item) => sum + item.coinValue * item.quantity, 0);
+  const coinsToEarn = coinsEnabled
+    ? items.filter((item) => !item.isSnack).reduce((sum, item) => sum + item.coinValue * item.quantity, 0)
+    : 0;
 
   const [motivation, setMotivation] = useState<string | null>(null);
   const [placing, setPlacing] = useState(false);
@@ -66,17 +68,17 @@ export default function CartPage() {
   }
 
   function handleIncrease(item: (typeof items)[number]) {
-    if (item.isSnack && !spendCoins(item.coinValue)) return;
+    if (coinsEnabled && item.isSnack && !spendCoins(item.coinValue)) return;
     updateQuantity(item.dishId, item.portion, item.quantity + 1);
   }
 
   function handleDecrease(item: (typeof items)[number]) {
-    if (item.isSnack) addCoins(item.coinValue);
+    if (coinsEnabled && item.isSnack) addCoins(item.coinValue);
     updateQuantity(item.dishId, item.portion, item.quantity - 1);
   }
 
   function handleRemove(item: (typeof items)[number]) {
-    if (item.isSnack) addCoins(item.coinValue * item.quantity);
+    if (coinsEnabled && item.isSnack) addCoins(item.coinValue * item.quantity);
     removeItem(item.dishId, item.portion);
   }
 

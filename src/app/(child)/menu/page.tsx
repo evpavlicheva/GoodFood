@@ -29,7 +29,6 @@ export default function MenuPage() {
       });
   }, []);
 
-  // Dishes that contain an unavailable ingredient are shown greyed out
   function effectiveDish(dish: Dish): Dish {
     if (!dish.available && dish.available !== undefined) return dish;
     const hasUnavailableIngredient = (dish.ingredients ?? []).some((ing) =>
@@ -39,13 +38,27 @@ export default function MenuPage() {
     return dish;
   }
 
-  const filteredDishes =
-    activeCategory === ALL ? dishes : dishes.filter((dish) => dish.category === activeCategory);
-
-  // Only show category filters that actually have dishes
+  // Only show categories that actually have dishes
   const usedCategories = new Set<string>(dishes.map((d) => d.category as string));
   const builtInFilters = CATEGORIES.filter((c) => usedCategories.has(c));
   const customFilters = customCategories.filter((c) => usedCategories.has(c.name));
+
+  // All category labels in order (for grouping)
+  const allCategoryLabels: { key: string; emoji: string; label: string }[] = [
+    ...builtInFilters.map((c) => ({
+      key: c,
+      emoji: CATEGORY_EMOJI[c],
+      label: t(`categories.${c}`),
+    })),
+    ...customFilters.map((c) => ({
+      key: c.name,
+      emoji: c.emoji,
+      label: lang === "ru" && c.nameRu ? c.nameRu : c.name,
+    })),
+  ];
+
+  const filteredDishes =
+    activeCategory === ALL ? dishes : dishes.filter((d) => d.category === activeCategory);
 
   return (
     <main className="min-h-screen px-6 py-10 pb-28">
@@ -56,8 +69,8 @@ export default function MenuPage() {
         {t("menu.title")}
       </h1>
 
+      {/* Category filter tabs */}
       <div className="mx-auto mb-8 flex max-w-5xl flex-wrap justify-center gap-2">
-        {/* All */}
         <button
           type="button"
           onClick={() => setActiveCategory(ALL)}
@@ -70,7 +83,6 @@ export default function MenuPage() {
           {CATEGORY_EMOJI["All"]} {t("categories.All")}
         </button>
 
-        {/* Built-in categories that have dishes */}
         {builtInFilters.map((category) => (
           <button
             key={category}
@@ -86,7 +98,6 @@ export default function MenuPage() {
           </button>
         ))}
 
-        {/* Custom categories that have dishes */}
         {customFilters.map((cat) => (
           <button
             key={cat.id}
@@ -103,11 +114,34 @@ export default function MenuPage() {
         ))}
       </div>
 
-      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {filteredDishes.map((dish) => (
-          <DishCard key={dish.id} dish={effectiveDish(dish)} />
-        ))}
-      </div>
+      {/* Dishes — grouped by category on "All", flat otherwise */}
+      {activeCategory === ALL ? (
+        <div className="mx-auto max-w-5xl space-y-10">
+          {allCategoryLabels.map(({ key, emoji, label }) => {
+            const group = dishes.filter((d) => d.category === key);
+            if (group.length === 0) return null;
+            return (
+              <section key={key}>
+                <h2 className="mb-4 flex items-center gap-2 font-heading text-2xl font-extrabold text-eel">
+                  <span>{emoji}</span>
+                  {label}
+                </h2>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {group.map((dish) => (
+                    <DishCard key={dish.id} dish={effectiveDish(dish)} />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredDishes.map((dish) => (
+            <DishCard key={dish.id} dish={effectiveDish(dish)} />
+          ))}
+        </div>
+      )}
 
       {filteredDishes.length === 0 && (
         <p className="mt-10 text-center font-heading text-lg text-eel-light">

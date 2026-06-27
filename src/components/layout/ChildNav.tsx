@@ -10,6 +10,7 @@ import { useCart } from "@/context/CartContext";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useChildProfile } from "@/hooks/useChildProfile";
 import { useLanguage } from "@/context/LanguageContext";
+import { useFeatureFlags } from "@/context/FeatureFlagsContext";
 
 /* ── SVG icons ── */
 function IconHome({ active }: { active: boolean }) {
@@ -63,6 +64,7 @@ export default function ChildNav() {
   const { totalCount } = useCart();
   const { isAuthenticated } = useAdminAuth();
   const { profile } = useChildProfile();
+  const { coinsEnabled } = useFeatureFlags();
 
   const homeActive = pathname === "/home";
   const cartActive = pathname === "/cart";
@@ -116,8 +118,8 @@ export default function ChildNav() {
             </AnimatePresence>
           </Link>
 
-          {/* Coin/cookie badge */}
-          {profile && (
+          {/* Coin/cookie badge — hidden when coins feature is off */}
+          {profile && coinsEnabled && (
             <Link
               href="/buddies"
               aria-label={t("coins.balanceLabel")}

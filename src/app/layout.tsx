@@ -21,6 +21,12 @@ export const metadata: Metadata = {
   title: "GoodFood",
   description:
     "GoodFood helps kids build healthy eating habits with a friendly mascot, fun games and tasty rewards!",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "GoodFood",
+  },
 };
 
 export const viewport: Viewport = {

@@ -20,9 +20,14 @@ export default function OrdersPage() {
   const { t } = useLanguage();
 
   // Siblings can share this device, so only show orders placed under the
-  // currently active profile's name.
+  // currently active profile's name. Completed/cancelled orders go to history.
   const orders = profile
-    ? allOrders.filter((o) => o.childName.trim().toLowerCase() === profile.name.trim().toLowerCase())
+    ? allOrders.filter(
+        (o) =>
+          o.childName.trim().toLowerCase() === profile.name.trim().toLowerCase() &&
+          o.status !== "completed" &&
+          o.status !== "cancelled"
+      )
     : [];
 
   function handleEditOrder(orderId: string) {

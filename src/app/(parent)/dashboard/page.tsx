@@ -37,28 +37,31 @@ export default function AdminDashboardPage() {
     updateOrderStatus(order.id, "cancelled");
   }
 
+  // Active orders only — completed ones move to child history automatically.
+  const activeOrders = orders.filter((o) => o.status !== "completed");
+
   const ordersWord =
     lang === "ru"
-      ? pluralRu(orders.length, "заказ", "заказа", "заказов")
-      : `order${orders.length === 1 ? "" : "s"}`;
+      ? pluralRu(activeOrders.length, "заказ", "заказа", "заказов")
+      : `order${activeOrders.length === 1 ? "" : "s"}`;
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-8">
       <h1 className="mb-1 font-heading text-3xl font-extrabold text-eel">{t("admin.dashboard.title")}</h1>
       <p className="mb-6 text-eel-light">
-        {orders.length === 0
+        {activeOrders.length === 0
           ? t("admin.dashboard.emptyText")
-          : t("admin.dashboard.ordersSoFar", { count: `${orders.length} ${ordersWord}` })}
+          : t("admin.dashboard.ordersSoFar", { count: `${activeOrders.length} ${ordersWord}` })}
       </p>
 
-      {orders.length === 0 ? (
+      {activeOrders.length === 0 ? (
         <div className="rounded-3xl bg-white p-10 text-center shadow-card">
           <span className="text-5xl">🍽️</span>
           <p className="mt-3 font-heading font-bold text-eel-light">{t("admin.dashboard.emptyHeading")}</p>
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {orders.map((order) => {
+          {activeOrders.map((order) => {
             const meta = STATUS_META[order.status];
             return (
               <motion.div

@@ -89,24 +89,24 @@ export default function HomePage() {
       </div>
 
       {/* ── Steps ── */}
-      <div className="mx-auto flex w-full max-w-2xl shrink-0 gap-2 px-4 pb-6 sm:pb-8">
+      <div className="mx-auto flex w-full max-w-2xl shrink-0 gap-2 px-4 pb-4 sm:pb-8">
         {STEPS.map((step, i) => (
           <div
             key={step.key}
-            className="flex flex-1 items-center gap-2 rounded-xl border-2 px-2.5 py-2.5 text-left sm:gap-3 sm:rounded-2xl sm:px-4"
+            className="flex flex-1 flex-col items-start gap-1 rounded-xl border-2 px-2 py-2 sm:flex-row sm:items-center sm:gap-3 sm:rounded-2xl sm:px-4 sm:py-2.5"
             style={{ background: step.bg, borderColor: step.border }}
           >
             <span
-              className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white sm:px-3 sm:py-1 sm:text-[11px]"
+              className="shrink-0 rounded-full px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide text-white sm:text-[11px]"
               style={{ background: step.stepColor }}
             >
               {t("landing.step", { n: i + 1 })}
             </span>
             <div className="min-w-0">
-              <div className="font-heading text-sm font-bold leading-tight sm:text-base" style={{ color: step.titleColor }}>
+              <div className="font-heading text-xs font-bold leading-tight sm:text-sm" style={{ color: step.titleColor }}>
                 {t(`landing.steps.${step.key}.title`)}
               </div>
-              <div className="mt-0.5 text-[11px] font-semibold leading-tight sm:text-xs" style={{ color: step.descColor }}>
+              <div className="mt-0.5 hidden text-[10px] font-semibold leading-tight sm:block sm:text-xs" style={{ color: step.descColor }}>
                 {t(`landing.steps.${step.key}.text`)}
               </div>
             </div>
